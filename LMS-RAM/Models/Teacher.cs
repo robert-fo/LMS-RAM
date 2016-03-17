@@ -11,10 +11,16 @@ namespace LMS_RAM.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required, Display(Name="Personnr")]
+
+        [StringLength(13, ErrorMessage = "Max 13 tecken")]
+        [Required, Display(Name = "Personnr")]
         public String SSN { get; set; }
+
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Required, Display(Name = "Förnamn")]
         public String FirstName { get; set; }
+
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Required, Display(Name = "Efternamn")]
         public String LastName { get; set; }
 

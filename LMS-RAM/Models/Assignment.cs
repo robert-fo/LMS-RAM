@@ -11,19 +11,30 @@ namespace LMS_RAM.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name="Benämning")]
         public String Name { get; set; }
+
+        [StringLength(2, ErrorMessage = "Max 2 tecken, VG, G, U")]
         [Display(Name = "Betyg")]
         public String Grade { get; set; }
+
+        [StringLength(200, ErrorMessage = "Max 200 tecken")]
         [Display(Name = "Kommentar")]
         public String Comment { get; set; }
+
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name = "Filnamn")]
         public String FileName { get; set; }
 
+
         [ForeignKey("StudentId"), Display(Name = "Student")]
         public virtual Student Student { get; set; }
+  
         [ForeignKey("TeacherId"), Display(Name = "Lärare")]
         public virtual Teacher Teacher { get; set; }
+        
         [ForeignKey("ScheduleId"), Display(Name = "Schema")]
         public virtual List<ScheduleItem> Schedule { get; set; }
     }
