@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -14,7 +16,7 @@ namespace LMS_RAM.Models
         [Display(Name = "Betyg")]
         public String Grade { get; set; }
         [Display(Name = "Kommentar")]
-        public String Comments { get; set; }
+        public String Comment { get; set; }
         [Display(Name = "Filnamn")]
         public String FileName { get; set; }
 
@@ -23,6 +25,6 @@ namespace LMS_RAM.Models
         [ForeignKey("TeacherId"), Display(Name = "Lärare")]
         public virtual Teacher Teacher { get; set; }
         [ForeignKey("ScheduleId"), Display(Name = "Schema")]
-        public virtual List<Schedule> Schedule { get; set; }
+        public virtual List<ScheduleItem> Schedule { get; set; }
     }
 }
