@@ -13,7 +13,7 @@ namespace LMS_RAM.Models
         public int Id { get; set; }
 
         [StringLength(13, ErrorMessage = "Max 13 tecken")]
-        [Required, Display(Name = "Personnummer")]
+        [Required, Display(Name = "Personnr")]
         public String SSN { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]

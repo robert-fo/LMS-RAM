@@ -18,11 +18,11 @@ namespace LMS_RAM.Models
         public String Name { get; set; }
 
         [Display(Name = "Betyg")]
-        [DisplayFormat(NullDisplayText = " ")]
         public Grade? Grade { get; set; }
 
         [StringLength(200, ErrorMessage = "Max 200 tecken")]
-        [Display(Name = "Kommentar")]    
+        [Display(Name = "Kommentar")]
+        [DisplayFormat(NullDisplayText = " ")]
         public String Comment { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
