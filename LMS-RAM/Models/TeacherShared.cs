@@ -13,7 +13,7 @@ namespace LMS_RAM.Models
         public String FileName { get; set; }
 
         [ForeignKey("CourseId")]
-        public virtual Student Course { get; set; }
+        public virtual Course Course { get; set; }
         [ForeignKey("TeacherId")]
         public virtual Student Student { get; set; }
 
