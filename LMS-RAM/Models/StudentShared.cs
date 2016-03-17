@@ -12,6 +12,9 @@ namespace LMS_RAM.Models
         [Key]
         public int Id { get; set; }
 
+		public int CourseId { get; set; }
+		public int StudentId { get; set; }
+
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name = "Beskrivning")] 
         public String Description { get; set; }

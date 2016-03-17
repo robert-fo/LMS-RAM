@@ -12,8 +12,8 @@ namespace LMS_RAM.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public int TeacherId { get; set; }
+		//[Required]
+        public int? TeacherId { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name = "Kursnamn")]
