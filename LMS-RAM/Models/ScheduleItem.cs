@@ -16,14 +16,19 @@ namespace LMS_RAM.Models
         public int CourseId { get; set; }
 
         [Required]
+        [Display(Name = "Beskrivning")]
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Starttid")]
         public DateTime StartTime { get; set; }
 
         [Required]
+        [Display(Name = "Sluttid")]
         public DateTime EndTime { get; set; }
 
+        [Display(Name = "Obligatorisk")]
         public Boolean Mandatory { get; set; }
 
         [ForeignKey("CourseId")]

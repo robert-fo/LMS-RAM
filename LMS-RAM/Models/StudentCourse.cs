@@ -18,7 +18,9 @@ namespace LMS_RAM.Models
         [Required]
         public int StudentId { get; set; }
         
-        public  Grade { get; set; }
+        [Display(Name = "Betyg")]
+        [DisplayFormat(NullDisplayText = " ")]
+        public  Grade? Grade { get; set; }
 
         [ForeignKey("CourseId")]
         public virtual Course course { get; set; }
