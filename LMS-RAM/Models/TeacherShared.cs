@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,6 +9,9 @@ namespace LMS_RAM.Models
 {
     public class TeacherShared
     {
+        [Key]
+        public int Id { get; set; }
+
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name = "Beskrivning")]
         public String Description { get; set; }
@@ -17,9 +22,8 @@ namespace LMS_RAM.Models
 
         [ForeignKey("CourseId")]
         public virtual Course Course { get; set; }
- 
+
         [ForeignKey("TeacherId")]
         public virtual Student Student { get; set; }
-
     }
 }

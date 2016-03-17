@@ -7,6 +7,7 @@ using System.Web;
 
 namespace LMS_RAM.Models
 {
+ 
     public class Assignment
     {
         [Key]
@@ -16,12 +17,12 @@ namespace LMS_RAM.Models
         [Display(Name="Benämning")]
         public String Name { get; set; }
 
-        [StringLength(2, ErrorMessage = "Max 2 tecken, VG, G, U")]
         [Display(Name = "Betyg")]
-        public String Grade { get; set; }
+        public Grade? Grade { get; set; }
 
         [StringLength(200, ErrorMessage = "Max 200 tecken")]
         [Display(Name = "Kommentar")]
+        [DisplayFormat(NullDisplayText = " ")]
         public String Comment { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
