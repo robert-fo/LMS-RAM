@@ -13,7 +13,6 @@ namespace LMS_RAM.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         StudentId = c.Int(nullable: false),
-                        TeacherId = c.Int(nullable: false),
                         ScheduleItemId = c.Int(nullable: false),
                         Name = c.String(maxLength: 50),
                         Grade = c.Int(),
@@ -23,9 +22,7 @@ namespace LMS_RAM.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.ScheduleItems", t => t.ScheduleItemId, cascadeDelete: true)
                 .ForeignKey("dbo.Students", t => t.StudentId, cascadeDelete: true)
-                .ForeignKey("dbo.Teachers", t => t.TeacherId, cascadeDelete: true)
                 .Index(t => t.StudentId)
-                .Index(t => t.TeacherId)
                 .Index(t => t.ScheduleItemId);
             
             CreateTable(
@@ -34,7 +31,7 @@ namespace LMS_RAM.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         CourseId = c.Int(nullable: false),
-                        Name = c.String(nullable: false, maxLength: 50),
+                        Name = c.String(nullable: false),
                         StartTime = c.DateTime(nullable: false),
                         EndTime = c.DateTime(nullable: false),
                         Mandatory = c.Boolean(nullable: false),
@@ -74,9 +71,9 @@ namespace LMS_RAM.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        SSN = c.String(nullable: false, maxLength: 50),
-                        FirstName = c.String(nullable: false, maxLength: 50),
-                        LastName = c.String(nullable: false, maxLength: 50),
+                        SSN = c.String(nullable: false),
+                        FirstName = c.String(nullable: false),
+                        LastName = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -137,7 +134,6 @@ namespace LMS_RAM.Migrations
             DropForeignKey("dbo.StudentShareds", "CourseId", "dbo.Courses");
             DropForeignKey("dbo.StudentCourses", "StudentId", "dbo.Students");
             DropForeignKey("dbo.StudentCourses", "CourseId", "dbo.Courses");
-            DropForeignKey("dbo.Assignments", "TeacherId", "dbo.Teachers");
             DropForeignKey("dbo.Assignments", "StudentId", "dbo.Students");
             DropForeignKey("dbo.Assignments", "ScheduleItemId", "dbo.ScheduleItems");
             DropForeignKey("dbo.ScheduleItems", "CourseId", "dbo.Courses");
@@ -151,7 +147,6 @@ namespace LMS_RAM.Migrations
             DropIndex("dbo.Courses", new[] { "TeacherId" });
             DropIndex("dbo.ScheduleItems", new[] { "CourseId" });
             DropIndex("dbo.Assignments", new[] { "ScheduleItemId" });
-            DropIndex("dbo.Assignments", new[] { "TeacherId" });
             DropIndex("dbo.Assignments", new[] { "StudentId" });
             DropTable("dbo.TeacherShareds");
             DropTable("dbo.StudentShareds");

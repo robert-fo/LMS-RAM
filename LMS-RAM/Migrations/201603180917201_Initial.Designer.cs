@@ -13,7 +13,7 @@ namespace LMS_RAM.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201603171509479_Initial"; }
+            get { return "201603180917201_Initial"; }
         }
         
         string IMigrationMetadata.Source
