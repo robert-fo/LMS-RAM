@@ -187,3 +187,6 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/LMS-RAM/Repository/CourseRepository.cs
+/LMS-RAM/Repository/StudentRepository.cs
+/LMS-RAM/Repository/TeacherRepository.cs

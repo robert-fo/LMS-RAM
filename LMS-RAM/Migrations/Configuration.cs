@@ -40,11 +40,11 @@ namespace LMS_RAM.Migrations
 			  new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName ="Åhlen" }
 			);
 
-			//context.Course.AddOrUpdate(
-			//  //p => p.Course,
-			//  new Course { Name="Datakurs", StartDate=DateTime.Now, EndDate=DateTime.Now.AddDays(30), Points=15, TeacherId=1 },
-			//  new Course { Name="dotNET", StartDate=DateTime.Now, EndDate=new DateTime().AddDays(50), Points=15, TeacherId=1 }
-			//);
+			context.Course.AddOrUpdate(
+				//p => p.Course,
+			  new Course { Name = "Datakurs", StartDate=new DateTime(2016, 5, 15), EndDate=new DateTime(2016, 10, 15), Points = 15, TeacherId = 1 },
+			  new Course { Name = "dotNET", StartDate=new DateTime(2016, 6, 20), EndDate=new DateTime(2016, 12, 31), Points = 10, TeacherId = 1 }
+			);
         }
     }
 }
