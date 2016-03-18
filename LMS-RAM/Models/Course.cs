@@ -12,15 +12,20 @@ namespace LMS_RAM.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public int TeacherId { get; set; }
-     
+		//[Required]
+        public int? TeacherId { get; set; }
+
+        [StringLength(50, ErrorMessage = "Max 50 tecken")]
+        [Display(Name = "Kursnamn")]
         public string Name { get; set; }
       
+        [Display(Name="Startdatum")]
         public DateTime StartDate { get; set; }
 
+        [Display(Name = "Slutdatum")]
         public DateTime EndDate { get; set; }
 
+        [Display(Name = "Poäng")]
         public Double Points { get; set; }
 
         [ForeignKey("TeacherId")]

@@ -13,6 +13,10 @@ namespace LMS_RAM.Models
         [Key]
         public int Id { get; set; }
 
+		public int StudentId { get; set; }
+		public int TeacherId { get; set; }
+		public int ScheduleItemId { get; set; }
+
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
         [Display(Name="Benämning")]
         public String Name { get; set; }
@@ -30,13 +34,13 @@ namespace LMS_RAM.Models
         public String FileName { get; set; }
 
 
-        [ForeignKey("StudentId"), Display(Name = "Student")]
+        [ForeignKey("StudentId")]
         public virtual Student Student { get; set; }
   
-        [ForeignKey("TeacherId"), Display(Name = "Lärare")]
+        [ForeignKey("TeacherId")]
         public virtual Teacher Teacher { get; set; }
         
-        [ForeignKey("ScheduleId"), Display(Name = "Schema")]
-        public virtual List<ScheduleItem> Schedule { get; set; }
+        [ForeignKey("ScheduleItemId")]
+        public virtual ScheduleItem Schedule { get; set; }
     }
 }
