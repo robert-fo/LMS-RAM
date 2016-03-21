@@ -159,8 +159,15 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AssignmentsController.cs" />
+    <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ScheduleItemsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\StudentSharedsController.cs" />
+    <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\TeacherSharedsController.cs" />
     <Compile Include="DataAccessLayer\DataContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -244,6 +251,41 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Teachers\Create.cshtml" />
+    <Content Include="Views\Teachers\Delete.cshtml" />
+    <Content Include="Views\Teachers\Details.cshtml" />
+    <Content Include="Views\Teachers\Edit.cshtml" />
+    <Content Include="Views\Teachers\Index.cshtml" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\Courses\Create.cshtml" />
+    <Content Include="Views\Courses\Delete.cshtml" />
+    <Content Include="Views\Courses\Details.cshtml" />
+    <Content Include="Views\Courses\Edit.cshtml" />
+    <Content Include="Views\Courses\Index.cshtml" />
+    <Content Include="Views\Assignments\Create.cshtml" />
+    <Content Include="Views\Assignments\Delete.cshtml" />
+    <Content Include="Views\Assignments\Details.cshtml" />
+    <Content Include="Views\Assignments\Edit.cshtml" />
+    <Content Include="Views\Assignments\Index.cshtml" />
+    <Content Include="Views\StudentShareds\Create.cshtml" />
+    <Content Include="Views\StudentShareds\Delete.cshtml" />
+    <Content Include="Views\StudentShareds\Details.cshtml" />
+    <Content Include="Views\StudentShareds\Edit.cshtml" />
+    <Content Include="Views\StudentShareds\Index.cshtml" />
+    <Content Include="Views\TeacherShareds\Create.cshtml" />
+    <Content Include="Views\TeacherShareds\Delete.cshtml" />
+    <Content Include="Views\TeacherShareds\Details.cshtml" />
+    <Content Include="Views\TeacherShareds\Edit.cshtml" />
+    <Content Include="Views\TeacherShareds\Index.cshtml" />
+    <Content Include="Views\ScheduleItems\Create.cshtml" />
+    <Content Include="Views\ScheduleItems\Delete.cshtml" />
+    <Content Include="Views\ScheduleItems\Details.cshtml" />
+    <Content Include="Views\ScheduleItems\Edit.cshtml" />
+    <Content Include="Views\ScheduleItems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Uploads\" />

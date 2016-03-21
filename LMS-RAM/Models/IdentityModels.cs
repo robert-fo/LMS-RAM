@@ -29,5 +29,19 @@ namespace LMS_RAM.Models
         {
             return new ApplicationDbContext();
         }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.Teacher> Teachers { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.Student> Students { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.Course> Courses { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.Assignment> Assignments { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.ScheduleItem> ScheduleItems { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.StudentShared> StudentShareds { get; set; }
+
+		public System.Data.Entity.DbSet<LMS_RAM.Models.TeacherShared> TeacherShareds { get; set; }
     }
 }
