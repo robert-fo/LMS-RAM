@@ -168,21 +168,12 @@
     <Compile Include="Controllers\StudentSharedsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TeacherSharedsController.cs" />
-    <Compile Include="DataAccessLayer\DataContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201603180917201_Initial.cs" />
-    <Compile Include="Migrations\201603180917201_Initial.Designer.cs">
-      <DependentUpon>201603180917201_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603221037216_Initial1.cs" />
-    <Compile Include="Migrations\201603221037216_Initial1.Designer.cs">
-      <DependentUpon>201603221037216_Initial1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603221209283_Initial_V2.cs" />
-    <Compile Include="Migrations\201603221209283_Initial_V2.Designer.cs">
-      <DependentUpon>201603221209283_Initial_V2.cs</DependentUpon>
+    <Compile Include="Migrations\201603221503147_Init.cs" />
+    <Compile Include="Migrations\201603221503147_Init.Designer.cs">
+      <DependentUpon>201603221503147_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -306,14 +297,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603180917201_Initial.resx">
-      <DependentUpon>201603180917201_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603221037216_Initial1.resx">
-      <DependentUpon>201603221037216_Initial1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603221209283_Initial_V2.resx">
-      <DependentUpon>201603221209283_Initial_V2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201603221503147_Init.resx">
+      <DependentUpon>201603221503147_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
