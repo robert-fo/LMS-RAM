@@ -13,6 +13,7 @@ namespace LMS_RAM.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+//			ContextKey = "Identity.Models.ApplicationDbContext";
         }
 
         protected override void Seed(LMS_RAM.Models.ApplicationDbContext context)

@@ -11,16 +11,16 @@ namespace LMS_RAM.DataAccessLayer
     {
 		public DataContext() : base("DefaultConnection") { }
 
-		public DbSet<Course> Course { get; set; }
-		public DbSet<ScheduleItem> ScheduleItem { get; set; }
-		public DbSet<Assignment> Assignment { get; set; }
+		public DbSet<Course> Courses { get; set; }
+		public DbSet<ScheduleItem> ScheduleItems { get; set; }
+		public DbSet<Assignment> Assignments { get; set; }
 
-		public DbSet<Student> Student { get; set; }
-		public DbSet<StudentCourse> StudentCourse { get; set; }
-		public DbSet<StudentShared> StudentShared { get; set; }
+		public DbSet<Student> Students { get; set; }
+		public DbSet<StudentCourse> StudentCourses { get; set; }
+		public DbSet<StudentShared> StudentShareds { get; set; }
 
-		public DbSet<Teacher> Teacher { get; set; }
-		public DbSet<TeacherShared> TeacherShared { get; set; }
+		public DbSet<Teacher> Teachers { get; set; }
+		public DbSet<TeacherShared> TeacherShareds { get; set; }
 
     }
 }
