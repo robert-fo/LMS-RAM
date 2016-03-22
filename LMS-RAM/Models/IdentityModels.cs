@@ -42,6 +42,8 @@ namespace LMS_RAM.Models
 
 		public System.Data.Entity.DbSet<LMS_RAM.Models.StudentShared> StudentShareds { get; set; }
 
+		public System.Data.Entity.DbSet<LMS_RAM.Models.StudentCourse> StudentCourses { get; set; }
+
 		public System.Data.Entity.DbSet<LMS_RAM.Models.TeacherShared> TeacherShareds { get; set; }
     }
 }
