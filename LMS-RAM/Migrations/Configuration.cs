@@ -69,8 +69,8 @@ namespace LMS_RAM.Migrations
 			{
 				var teachers = new List<Teacher> 
 				{ 
- 					new Teacher { SSN = "19630101-1234", FirstName = "Lena", LastName = "Ek" },
-					new Teacher { SSN = "19630202-2345", FirstName = "Kalle", LastName = "Ek" }
+ 					new Teacher { SSN = "19630101-1234", FirstName = "Lena", LastName = "Ek", UserName = "teacher1@mail.com" },
+					new Teacher { SSN = "19630202-2345", FirstName = "Kalle", LastName = "Ek", UserName = "teacher2@mail.com"}
 				};
 
 				teachers.ForEach(teacher => context.Teachers.AddOrUpdate(teacher));
@@ -83,10 +83,10 @@ namespace LMS_RAM.Migrations
 			{
 				var students = new List<Student> 
 				{ 
-					new Student { SSN = "20050101-1234", FirstName = "Lotta", LastName = "Åhl" },
-					new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName = "Åhlen" },
-					new Student { SSN = "20060112-1111", FirstName = "Christer", LastName = "Nilsson" },
-					new Student { SSN = "20051231-2222", FirstName = "Lena", LastName = "Svensson" }
+					new Student { SSN = "20050101-1234", FirstName = "Lotta", LastName = "Åhl", UserName = "elev1@mail.com"  },
+					new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName = "Åhlen", UserName = "elev2@mail.com" },
+					new Student { SSN = "20060112-1111", FirstName = "Christer", LastName = "Nilsson", UserName= "-" },
+					new Student { SSN = "20051231-2222", FirstName = "Lena", LastName = "Svensson", UserName= "-" }
 				};
 
 				students.ForEach(student => context.Students.AddOrUpdate(student));
@@ -113,10 +113,10 @@ namespace LMS_RAM.Migrations
 			{
 				var studentCourses = new List<StudentCourse> 
 				{ 
-					new StudentCourse { CourseId = 4, StudentId = 1 },
-					new StudentCourse { CourseId = 4, StudentId = 2 },
-					new StudentCourse { CourseId = 5, StudentId = 1 },
-					new StudentCourse { CourseId = 5, StudentId = 2 }
+					new StudentCourse { CourseId = 1, StudentId = 1 },
+					new StudentCourse { CourseId = 1, StudentId = 2 },
+					new StudentCourse { CourseId = 2, StudentId = 1 },
+					new StudentCourse { CourseId = 2, StudentId = 2 }
 				};
 
 				studentCourses.ForEach(studentCourse => context.StudentCourses.AddOrUpdate(studentCourse));
@@ -130,13 +130,13 @@ namespace LMS_RAM.Migrations
 				var studentShareds = new List<StudentShared> 
 				{ 
 					new StudentShared 
-						{ CourseId = 4, StudentId = 1, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
+						{ CourseId = 1, StudentId = 1, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
 					new StudentShared 
-						{ CourseId = 4, StudentId = 2, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
+						{ CourseId = 1, StudentId = 2, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
 					new StudentShared 
-						{ CourseId = 5, StudentId = 1 },
+						{ CourseId = 2, StudentId = 1 },
 					new StudentShared 
-						{ CourseId = 5, StudentId = 2 }
+						{ CourseId = 2, StudentId = 2 }
 				};
 
 				studentShareds.ForEach(studentShared => context.StudentShareds.AddOrUpdate(studentShared));
@@ -150,13 +150,13 @@ namespace LMS_RAM.Migrations
 				var teacherShareds = new List<TeacherShared> 
 				{ 
 					new TeacherShared 
-						{ CourseId = 4, TeacherId = 1, Description = "Inlämningsuppg 1", FileName = "Inlämningsupp1.pdf" },
+						{ CourseId = 1, TeacherId = 1, Description = "Inlämningsuppg 1", FileName = "Inlämningsupp1.pdf" },
 					new TeacherShared 
-						{ CourseId = 4, TeacherId = 2, Description = "Inlämningsuppg 1", FileName = "Inlämningsuppg1.pdf" },
+						{ CourseId = 1, TeacherId = 2, Description = "Inlämningsuppg 1", FileName = "Inlämningsuppg1.pdf" },
 					new TeacherShared 
-						{ CourseId = 5, TeacherId = 1 },
+						{ CourseId = 2, TeacherId = 1 },
 					new TeacherShared 
-						{ CourseId = 5, TeacherId = 2 }
+						{ CourseId = 2, TeacherId = 2 }
 				};
 
 				teacherShareds.ForEach(teacherShared => context.TeacherShareds.AddOrUpdate(teacherShared));

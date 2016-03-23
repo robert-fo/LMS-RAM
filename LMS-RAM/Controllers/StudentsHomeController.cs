@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace LMS_RAM.Controllers
 {
@@ -29,11 +30,18 @@ namespace LMS_RAM.Controllers
         {
             var coursesAll = repository.GetAllCourses();
             var studentcoursesAll = repository.GetAllStudentCourses();
+            var studentsAll = repository.GetAllStudents();
+
+            var user = User.Identity.GetUserName();
+
+            var studenten = from student in studentsAll
+                      where student.UserName == user
+                      select student;
 
             var studentcourses = from course in studentcoursesAll
-                          where course.StudentId == 1
-                          orderby course.Id
-                          select course;
+                                 where course.StudentId == studenten.First().Id
+                                 orderby course.Id
+                                 select course;
 
             List<Course> sCourses = new List<Course>();
 

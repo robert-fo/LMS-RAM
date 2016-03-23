@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace LMS_RAM.Controllers
 {
@@ -25,14 +26,20 @@ namespace LMS_RAM.Controllers
         // GET: TeacherHHome
         public ActionResult Index()
         {
-            var courses = repository.GetAllCourses();
+            var coursesAll = repository.GetAllCourses();
+            var studentcoursesAll = repository.GetAllStudentCourses();
+            var teachersAll = repository.GetAllTeachers();
 
-            var teacherCourses = from course in courses
-                                 where course.TeacherId == 1
-                                 orderby course.Id
-                                 select course;
+            var user = User.Identity.GetUserName();
 
-            var tCourses = teacherCourses.ToList();
+            var lararen = from teacher in teachersAll
+                          where teacher.UserName == user
+                          select teacher;
+
+            var tCourses = from course in coursesAll
+                          where course.TeacherId == lararen.First().Id
+                          orderby course.Id
+                          select course;
 
             return View(tCourses);
         }
