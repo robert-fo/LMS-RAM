@@ -38,11 +38,11 @@ namespace LMS_RAM.Migrations
 				var userStore = new UserStore<ApplicationUser>(context);
 				var userManager = new UserManager<ApplicationUser>(userStore);
 
-                var user1 = new ApplicationUser { UserName = "admin@email.com" };
-                var user2 = new ApplicationUser { UserName = "teacher1@email.com" };
-                var user3 = new ApplicationUser { UserName = "teacher2@email.com" };
-                var user4 = new ApplicationUser { UserName = "elev1@email.com" };
-                var user5 = new ApplicationUser { UserName = "elev2@email.com" };
+                var user1 = new ApplicationUser { UserName = "admin@mail.com" };
+                var user2 = new ApplicationUser { UserName = "teacher1@mail.com" };
+                var user3 = new ApplicationUser { UserName = "teacher2@mail.com" };
+                var user4 = new ApplicationUser { UserName = "elev1@mail.com" };
+                var user5 = new ApplicationUser { UserName = "elev2@mail.com" };
 
 				userManager.Create(user1, "Password#1");
 				userManager.Create(user2, "Password#1");
