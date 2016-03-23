@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace LMS_RAM.Controllers
 {
-    [Authorize(Roles = "admin")]
     public class HomeController : Controller
     {
         public ActionResult Index()

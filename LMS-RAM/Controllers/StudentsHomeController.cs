@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace LMS_RAM.Controllers
 {
+    [Authorize]
     public class StudentsHomeController : Controller
     {
  

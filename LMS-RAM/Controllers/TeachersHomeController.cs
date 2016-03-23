@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LMS_RAM.Controllers
 {
+    [Authorize]
     public class TeachersHomeController : Controller
     {
         private IRepository repository;
