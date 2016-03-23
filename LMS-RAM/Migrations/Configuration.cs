@@ -22,7 +22,7 @@ namespace LMS_RAM.Migrations
         {
 			System.Diagnostics.Debug.WriteLine("Seed of Users and Roles started");
 
-			if (!context.Users.Any(u => u.UserName == "admin"))
+			if (!context.Users.Any(u => u.UserName == "admin@email.com"))
 			{
 				// add roles
 				// ---------
@@ -37,12 +37,12 @@ namespace LMS_RAM.Migrations
 				// ---------
 				var userStore = new UserStore<ApplicationUser>(context);
 				var userManager = new UserManager<ApplicationUser>(userStore);
-	
-				var user1 = new ApplicationUser { UserName = "admin" };
-				var user2 = new ApplicationUser { UserName = "teacher1" };
-				var user3 = new ApplicationUser { UserName = "teacher2" };
-				var user4 = new ApplicationUser { UserName = "elev1" };
-				var user5 = new ApplicationUser { UserName = "elev2" };
+
+                var user1 = new ApplicationUser { UserName = "admin@email.com" };
+                var user2 = new ApplicationUser { UserName = "teacher1@email.com" };
+                var user3 = new ApplicationUser { UserName = "teacher2@email.com" };
+                var user4 = new ApplicationUser { UserName = "elev1@email.com" };
+                var user5 = new ApplicationUser { UserName = "elev2@email.com" };
 
 				userManager.Create(user1, "Password#1");
 				userManager.Create(user2, "Password#1");
