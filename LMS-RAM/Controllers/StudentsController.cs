@@ -10,6 +10,7 @@ using LMS_RAM.Models;
 
 namespace LMS_RAM.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class StudentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
