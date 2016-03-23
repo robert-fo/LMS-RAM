@@ -1,5 +1,4 @@
-﻿using LMS_RAM.DataAccessLayer;
-using LMS_RAM.Models;
+﻿using LMS_RAM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +8,11 @@ namespace LMS_RAM.Repository
 {
     public class WorkingRepository
     {
-        private DataContext db;
+        private ApplicationDbContext db;
 	
         public WorkingRepository()
         {
-            db = new DataContext();
+            db = new ApplicationDbContext();
         }
 
 		#region Get all Teachers.
