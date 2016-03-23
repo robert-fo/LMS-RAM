@@ -22,7 +22,7 @@ namespace LMS_RAM.Migrations
         {
 			System.Diagnostics.Debug.WriteLine("Seed of Users and Roles started");
 
-			if (!context.Users.Any(u => u.UserName == "admin@email.com"))
+			if (!context.Users.Any(u => u.UserName == "admin@mail.com"))
 			{
 				// add roles
 				// ---------
@@ -38,17 +38,22 @@ namespace LMS_RAM.Migrations
 				var userStore = new UserStore<ApplicationUser>(context);
 				var userManager = new UserManager<ApplicationUser>(userStore);
 
-                var user1 = new ApplicationUser { UserName = "admin@mail.com" };
-                var user2 = new ApplicationUser { UserName = "teacher1@mail.com" };
-                var user3 = new ApplicationUser { UserName = "teacher2@mail.com" };
-                var user4 = new ApplicationUser { UserName = "elev1@mail.com" };
-                var user5 = new ApplicationUser { UserName = "elev2@mail.com" };
+                var user1 = new ApplicationUser 
+					{ Email = "admin@mail.com", UserName = "admin@mail.com" };
+                var user2 = new ApplicationUser 
+					{ Email = "teacher1@mail.com", UserName = "teacher1@mail.com" };
+                var user3 = new ApplicationUser 
+					{ Email = "teacher1@mail.com", UserName = "teacher2@mail.com" };
+                var user4 = new ApplicationUser 
+					{ Email = "elev1@mail.com", UserName = "elev1@mail.com" };
+                var user5 = new ApplicationUser 
+					{ Email = "elev2@mail.com", UserName = "elev2@mail.com" };
 
-				userManager.Create(user1, "Password#1");
-				userManager.Create(user2, "Password#1");
-				userManager.Create(user3, "Password#1");
-				userManager.Create(user4, "Password#1");
-				userManager.Create(user5, "Password#1");
+				userManager.Create(user1, "Pass#1");
+				userManager.Create(user2, "Pass#1");
+				userManager.Create(user3, "Pass#1");
+				userManager.Create(user4, "Pass#1");
+				userManager.Create(user5, "Pass#1");
 
 				// add user to a role
 				userManager.AddToRole(user1.Id, "admin");
