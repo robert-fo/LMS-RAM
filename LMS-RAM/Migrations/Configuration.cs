@@ -93,7 +93,7 @@ namespace LMS_RAM.Migrations
 				context.SaveChanges();
 			}
 
-			System.Diagnostics.Debug.WriteLine("Seed of courses started");
+			System.Diagnostics.Debug.WriteLine("Seed of Courses started");
 
 			if (!context.Courses.Any())
 			{
@@ -104,6 +104,62 @@ namespace LMS_RAM.Migrations
 				};
 
 				courses.ForEach(course => context.Courses.AddOrUpdate(course));
+				context.SaveChanges();
+			}
+
+			System.Diagnostics.Debug.WriteLine("Seed of StudentCourses started");
+
+			if (!context.StudentCourses.Any())
+			{
+				var studentCourses = new List<StudentCourse> 
+				{ 
+					new StudentCourse { CourseId = 4, StudentId = 1 },
+					new StudentCourse { CourseId = 4, StudentId = 2 },
+					new StudentCourse { CourseId = 5, StudentId = 1 },
+					new StudentCourse { CourseId = 5, StudentId = 2 }
+				};
+
+				studentCourses.ForEach(studentCourse => context.StudentCourses.AddOrUpdate(studentCourse));
+				context.SaveChanges();
+			}
+
+			System.Diagnostics.Debug.WriteLine("Seed of StudentShared started");
+
+			if (!context.StudentShareds.Any())
+			{
+				var studentShareds = new List<StudentShared> 
+				{ 
+					new StudentShared 
+						{ CourseId = 4, StudentId = 1, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
+					new StudentShared 
+						{ CourseId = 4, StudentId = 2, Description = "Inlämningsuppgift 1", FileName = "Inlämningsuppgift1.pdf" },
+					new StudentShared 
+						{ CourseId = 5, StudentId = 1 },
+					new StudentShared 
+						{ CourseId = 5, StudentId = 2 }
+				};
+
+				studentShareds.ForEach(studentShared => context.StudentShareds.AddOrUpdate(studentShared));
+				context.SaveChanges();
+			}
+
+			System.Diagnostics.Debug.WriteLine("Seed of TeacherShareds started");
+
+			if (!context.TeacherShareds.Any())
+			{
+				var teacherShareds = new List<TeacherShared> 
+				{ 
+					new TeacherShared 
+						{ CourseId = 4, TeacherId = 1, Description = "Inlämningsuppg 1", FileName = "Inlämningsupp1.pdf" },
+					new TeacherShared 
+						{ CourseId = 4, TeacherId = 2, Description = "Inlämningsuppg 1", FileName = "Inlämningsuppg1.pdf" },
+					new TeacherShared 
+						{ CourseId = 5, TeacherId = 1 },
+					new TeacherShared 
+						{ CourseId = 5, TeacherId = 2 }
+				};
+
+				teacherShareds.ForEach(teacherShared => context.TeacherShareds.AddOrUpdate(teacherShared));
 				context.SaveChanges();
 			}
         }
