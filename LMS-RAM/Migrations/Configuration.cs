@@ -40,33 +40,36 @@ namespace LMS_RAM.Migrations
 				var userStore = new UserStore<ApplicationUser>(context);
 				var userManager = new UserManager<ApplicationUser>(userStore);
 
-                var user1 = new ApplicationUser { Email = "admin@mail.com", UserName = "admin@mail.com" };
-                var user2 = new ApplicationUser { Email = "teacher1@mail.com", UserName = "teacher1@mail.com" };
-                var user3 = new ApplicationUser { Email = "teacher1@mail.com", UserName = "teacher2@mail.com" };
-                var user4 = new ApplicationUser { Email = "elev1@mail.com", UserName = "elev1@mail.com" };
-                var user5 = new ApplicationUser { Email = "elev2@mail.com", UserName = "elev2@mail.com" };
-                var user6 = new ApplicationUser { Email = "elev3@mail.com", UserName = "elev3@mail.com" };
-                var user7 = new ApplicationUser { Email = "elev4@mail.com", UserName = "elev4@mail.com" };
-                var user8 = new ApplicationUser { Email = "elev5@mail.com", UserName = "elev5@mail.com" };
+                var a1 = new ApplicationUser { Email = "admin@mail.com", UserName = "admin@mail.com" };
+                var t1 = new ApplicationUser { Email = "teacher1@mail.com", UserName = "teacher1@mail.com" };
+                var t2 = new ApplicationUser { Email = "teacher2@mail.com", UserName = "teacher2@mail.com" };
+                var t3 = new ApplicationUser { Email = "teacher3@mail.com", UserName = "teacher3@mail.com" };
+                var s1 = new ApplicationUser { Email = "student1@mail.com", UserName = "student1@mail.com" };
+                var s2 = new ApplicationUser { Email = "student2@mail.com", UserName = "student2@mail.com" };
+                var s3 = new ApplicationUser { Email = "student3@mail.com", UserName = "student3@mail.com" };
+                var s4 = new ApplicationUser { Email = "student4@mail.com", UserName = "student4@mail.com" };
+                var s5 = new ApplicationUser { Email = "student5@mail.com", UserName = "student5@mail.com" };
 
-				userManager.Create(user1, "Pass#1");
-				userManager.Create(user2, "Pass#1");
-				userManager.Create(user3, "Pass#1");
-				userManager.Create(user4, "Pass#1");
-				userManager.Create(user5, "Pass#1");
-                userManager.Create(user6, "Pass#1");
-                userManager.Create(user7, "Pass#1");
-                userManager.Create(user8, "Pass#1");
+				userManager.Create(a1, "Pass#1");
+				userManager.Create(t1, "Pass#1");
+				userManager.Create(t2, "Pass#1");
+				userManager.Create(t3, "Pass#1");
+				userManager.Create(s1, "Pass#1");
+                userManager.Create(s2, "Pass#1");
+                userManager.Create(s3, "Pass#1");
+                userManager.Create(s4, "Pass#1");
+                userManager.Create(s5, "Pass#1");
 
 				// add user to a role
-				userManager.AddToRole(user1.Id, "admin");
-				userManager.AddToRole(user2.Id, "teacher");
-				userManager.AddToRole(user3.Id, "teacher");
-				userManager.AddToRole(user4.Id, "student");
-				userManager.AddToRole(user5.Id, "student");
-                userManager.AddToRole(user6.Id, "student");
-                userManager.AddToRole(user7.Id, "student");
-                userManager.AddToRole(user8.Id, "student");
+				userManager.AddToRole(a1.Id, "admin");
+				userManager.AddToRole(t1.Id, "teacher");
+                userManager.AddToRole(t2.Id, "teacher");
+                userManager.AddToRole(t3.Id, "teacher");
+				userManager.AddToRole(s1.Id, "student");
+				userManager.AddToRole(s2.Id, "student");
+                userManager.AddToRole(s3.Id, "student");
+                userManager.AddToRole(s4.Id, "student");
+                userManager.AddToRole(s5.Id, "student");
 			}
             #endregion
 
@@ -79,9 +82,9 @@ namespace LMS_RAM.Migrations
 			{
 				var teachers = new List<Teacher> 
 				{ 
- 					new Teacher { SSN = "19630101-1234", FirstName = "Lena", LastName = "Ek" },
-					new Teacher { SSN = "19630202-2345", FirstName = "Kalle", LastName = "Ek" },
-					new Teacher { SSN = "19641212-1111", FirstName = "Per", LastName = "Persson" }
+ 					new Teacher { SSN = "19630101-1234", FirstName = "Lena", LastName = "Ek", UserName = "teacher1@mail.com" },
+					new Teacher { SSN = "19630202-2345", FirstName = "Kalle", LastName = "Ek", UserName = "teacher2@mail.com" },
+					new Teacher { SSN = "19641212-1111", FirstName = "Per", LastName = "Persson", UserName = "teacher3@mail.com" }
 				};
 
 				teachers.ForEach(teacher => context.Teachers.AddOrUpdate(teacher));
@@ -135,11 +138,11 @@ namespace LMS_RAM.Migrations
 			{
 				var students = new List<Student> 
 				{ 
-					new Student { SSN = "20050101-1234", FirstName = "Lotta", LastName = "Åhl" },
-					new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName = "Åhlen" },
-					new Student { SSN = "20060112-1111", FirstName = "Christer", LastName = "Nilsson" },
-					new Student { SSN = "20051231-2222", FirstName = "Lena", LastName = "Svensson" },
-					new Student { SSN = "20060505-3333", FirstName = "Pia", LastName = "Karlsson" }
+					new Student { SSN = "20050101-1234", FirstName = "Lotta", LastName = "Åhl", UserName = "student1@mail.com" },
+					new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName = "Åhlen", UserName = "student2@mail.com" },
+					new Student { SSN = "20060112-1111", FirstName = "Christer", LastName = "Nilsson", UserName = "student3@mail.com" },
+					new Student { SSN = "20051231-2222", FirstName = "Lena", LastName = "Svensson", UserName = "student4@mail.com" },
+					new Student { SSN = "20060505-3333", FirstName = "Pia", LastName = "Karlsson", UserName = "student5@mail.com" }
 				};
 
 				students.ForEach(student => context.Students.AddOrUpdate(student));
