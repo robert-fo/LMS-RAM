@@ -24,5 +24,9 @@ namespace LMS_RAM.Models
         [Required, Display(Name = "Efternamn")]
         public String LastName { get; set; }
 
+        [Required]
+        [Display(Name = "User Name")]
+        public string UserName { get; set; }
+
     }
 }

@@ -3,7 +3,7 @@ namespace LMS_RAM.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initialv2 : DbMigration
+    public partial class initial : DbMigration
     {
         public override void Up()
         {
@@ -63,6 +63,7 @@ namespace LMS_RAM.Migrations
                         SSN = c.String(nullable: false, maxLength: 13),
                         FirstName = c.String(nullable: false, maxLength: 50),
                         LastName = c.String(nullable: false, maxLength: 50),
+                        UserName = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -74,6 +75,7 @@ namespace LMS_RAM.Migrations
                         SSN = c.String(nullable: false),
                         FirstName = c.String(nullable: false),
                         LastName = c.String(nullable: false),
+                        UserName = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             

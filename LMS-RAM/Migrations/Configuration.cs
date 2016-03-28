@@ -1,20 +1,20 @@
 namespace LMS_RAM.Migrations
 {
-    using LMS_RAM.Models;
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+	using LMS_RAM.Models;
+	using Microsoft.AspNet.Identity;
+	using Microsoft.AspNet.Identity.EntityFramework;
+	using System;
+	using System.Collections.Generic;
+	using System.Data.Entity;
+	using System.Data.Entity.Migrations;
+	using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<LMS_RAM.Models.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "LMS_RAM.Models.ApplicationDbContext";
+			ContextKey = "LMS_RAM.Models.ApplicationDbContext";
         }
 
         protected override void Seed(LMS_RAM.Models.ApplicationDbContext context)
@@ -23,22 +23,22 @@ namespace LMS_RAM.Migrations
             // Users and roles
             // ----------------------------------------------------------------------------------------------
             #region UserAndRoles
-            System.Diagnostics.Debug.WriteLine("Seed of Users and Roles started");
-            if (!context.Users.Any(u => u.UserName == "admin@mail.com"))
-            {
-                // add roles
-                // ---------
-                var roleStore = new RoleStore<IdentityRole>(context);
-                var roleManager = new RoleManager<IdentityRole>(roleStore);
-
+			System.Diagnostics.Debug.WriteLine("Seed of Users and Roles started");
+			if (!context.Users.Any(u => u.UserName == "admin@mail.com"))
+			{
+				// add roles
+				// ---------
+				var roleStore = new RoleStore<IdentityRole>(context);
+				var roleManager = new RoleManager<IdentityRole>(roleStore);
+	
                 roleManager.Create(new IdentityRole { Name = "admin" });
                 roleManager.Create(new IdentityRole { Name = "teacher" });
                 roleManager.Create(new IdentityRole { Name = "student" });
 
-                // add users
-                // ---------
-                var userStore = new UserStore<ApplicationUser>(context);
-                var userManager = new UserManager<ApplicationUser>(userStore);
+				// add users
+				// ---------
+				var userStore = new UserStore<ApplicationUser>(context);
+				var userManager = new UserManager<ApplicationUser>(userStore);
 
                 var user1 = new ApplicationUser { Email = "admin@mail.com", UserName = "admin@mail.com" };
                 var user2 = new ApplicationUser { Email = "teacher1@mail.com", UserName = "teacher1@mail.com" };
@@ -49,44 +49,44 @@ namespace LMS_RAM.Migrations
                 var user7 = new ApplicationUser { Email = "elev4@mail.com", UserName = "elev4@mail.com" };
                 var user8 = new ApplicationUser { Email = "elev5@mail.com", UserName = "elev5@mail.com" };
 
-                userManager.Create(user1, "Pass#1");
-                userManager.Create(user2, "Pass#1");
-                userManager.Create(user3, "Pass#1");
-                userManager.Create(user4, "Pass#1");
-                userManager.Create(user5, "Pass#1");
+				userManager.Create(user1, "Pass#1");
+				userManager.Create(user2, "Pass#1");
+				userManager.Create(user3, "Pass#1");
+				userManager.Create(user4, "Pass#1");
+				userManager.Create(user5, "Pass#1");
                 userManager.Create(user6, "Pass#1");
                 userManager.Create(user7, "Pass#1");
                 userManager.Create(user8, "Pass#1");
 
-                // add user to a role
-                userManager.AddToRole(user1.Id, "admin");
-                userManager.AddToRole(user2.Id, "teacher");
-                userManager.AddToRole(user3.Id, "teacher");
-                userManager.AddToRole(user4.Id, "student");
-                userManager.AddToRole(user5.Id, "student");
+				// add user to a role
+				userManager.AddToRole(user1.Id, "admin");
+				userManager.AddToRole(user2.Id, "teacher");
+				userManager.AddToRole(user3.Id, "teacher");
+				userManager.AddToRole(user4.Id, "student");
+				userManager.AddToRole(user5.Id, "student");
                 userManager.AddToRole(user6.Id, "student");
                 userManager.AddToRole(user7.Id, "student");
                 userManager.AddToRole(user8.Id, "student");
-            }
+			}
             #endregion
 
             // ----------------------------------------------------------------------------------------------
             // Teachers
             // ----------------------------------------------------------------------------------------------
             #region Teachers
-            System.Diagnostics.Debug.WriteLine("Seed of Teachers started");
-            if (!context.Teachers.Any())
-            {
-                var teachers = new List<Teacher> 
+			System.Diagnostics.Debug.WriteLine("Seed of Teachers started");
+			if (!context.Teachers.Any())
+			{
+				var teachers = new List<Teacher> 
 				{ 
  					new Teacher { SSN = "19630101-1234", FirstName = "Lena", LastName = "Ek" },
 					new Teacher { SSN = "19630202-2345", FirstName = "Kalle", LastName = "Ek" },
 					new Teacher { SSN = "19641212-1111", FirstName = "Per", LastName = "Persson" }
 				};
 
-                teachers.ForEach(teacher => context.Teachers.AddOrUpdate(teacher));
-                context.SaveChanges();
-            }
+				teachers.ForEach(teacher => context.Teachers.AddOrUpdate(teacher));
+				context.SaveChanges();
+			}
             #endregion
 
             // ----------------------------------------------------------------------------------------------
@@ -131,9 +131,9 @@ namespace LMS_RAM.Migrations
             // ----------------------------------------------------------------------------------------------
             #region Students
             System.Diagnostics.Debug.WriteLine("Seed of Students started");
-            if (!context.Students.Any())
-            {
-                var students = new List<Student> 
+			if (!context.Students.Any())
+			{
+				var students = new List<Student> 
 				{ 
 					new Student { SSN = "20050101-1234", FirstName = "Lotta", LastName = "Åhl" },
 					new Student { SSN = "20050202-2345", FirstName = "Pelle", LastName = "Åhlen" },
@@ -142,9 +142,9 @@ namespace LMS_RAM.Migrations
 					new Student { SSN = "20060505-3333", FirstName = "Pia", LastName = "Karlsson" }
 				};
 
-                students.ForEach(student => context.Students.AddOrUpdate(student));
-                context.SaveChanges();
-            }
+				students.ForEach(student => context.Students.AddOrUpdate(student));
+				context.SaveChanges();
+			}
             #endregion
 
             // ----------------------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ namespace LMS_RAM.Migrations
             #region ScheduleItems
             System.Diagnostics.Debug.WriteLine("Seed of ScheduleItems started");
             if (!context.ScheduleItems.Any())
-            {
+			{
                 var scheduleItems = new List<ScheduleItem> 
 				{ 
 					new ScheduleItem 
@@ -208,18 +208,18 @@ namespace LMS_RAM.Migrations
 				};
 
                 assignments.ForEach(assignment => context.Assignments.AddOrUpdate(assignment));
-                context.SaveChanges();
-            }
+				context.SaveChanges();
+			}
             #endregion
 
             // ----------------------------------------------------------------------------------------------
             // StudentCourses 
             // ----------------------------------------------------------------------------------------------
             #region StudentCourses
-            System.Diagnostics.Debug.WriteLine("Seed of StudentCourses started");
-            if (!context.StudentCourses.Any())
-            {
-                var studentCourses = new List<StudentCourse> 
+			System.Diagnostics.Debug.WriteLine("Seed of StudentCourses started");
+			if (!context.StudentCourses.Any())
+			{
+				var studentCourses = new List<StudentCourse> 
 				{ 
 					new StudentCourse { CourseId = 1, StudentId = 1 },
 					new StudentCourse { CourseId = 1, StudentId = 2 },
@@ -227,9 +227,9 @@ namespace LMS_RAM.Migrations
 					new StudentCourse { CourseId = 2, StudentId = 2 }
 				};
 
-                studentCourses.ForEach(studentCourse => context.StudentCourses.AddOrUpdate(studentCourse));
-                context.SaveChanges();
-            }
+				studentCourses.ForEach(studentCourse => context.StudentCourses.AddOrUpdate(studentCourse));
+				context.SaveChanges();
+			}
             #endregion
 
             // ----------------------------------------------------------------------------------------------
@@ -237,10 +237,10 @@ namespace LMS_RAM.Migrations
             // -- Uncomment, update fields and generate after StudentId is set int students and CourseId in Courses
             // ----------------------------------------------------------------------------------------------
             #region StudentShared
-            System.Diagnostics.Debug.WriteLine("Seed of StudentShared started");
-            if (!context.StudentShareds.Any())
-            {
-                var studentShareds = new List<StudentShared> 
+			System.Diagnostics.Debug.WriteLine("Seed of StudentShared started");
+			if (!context.StudentShareds.Any())
+			{
+				var studentShareds = new List<StudentShared> 
 				{ 
 					new StudentShared 
 						{ CourseId = 2, StudentId = 1, Description = "Bra artilkel om Angular", FileName = "Angular.pdf" },
@@ -252,9 +252,9 @@ namespace LMS_RAM.Migrations
 						{ CourseId = 2, StudentId = 2 }
 				};
 
-                studentShareds.ForEach(studentShared => context.StudentShareds.AddOrUpdate(studentShared));
-                context.SaveChanges();
-            }
+				studentShareds.ForEach(studentShared => context.StudentShareds.AddOrUpdate(studentShared));
+				context.SaveChanges();
+			}
             #endregion
 
         }
