@@ -27,6 +27,6 @@ namespace LMS_RAM.Models
         public virtual Course Course { get; set; }
 
         [ForeignKey("TeacherId")]
-        public virtual Student Student { get; set; }
+        public virtual Teacher Teacher { get; set; }
     }
 }
