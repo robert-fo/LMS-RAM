@@ -18,7 +18,7 @@ namespace LMS_RAM.Controllers
         // GET: TeacherShareds
         public ActionResult Index()
         {
-            var teacherShareds = db.TeacherShareds.Include(t => t.Course).Include(t => t.Student);
+            var teacherShareds = db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
             return View(teacherShareds.ToList());
         }
 
