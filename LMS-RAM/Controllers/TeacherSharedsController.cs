@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LMS_RAM.Models;
+using System.IO;
 
 namespace LMS_RAM.Controllers
 {
@@ -50,12 +51,26 @@ namespace LMS_RAM.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared)
+        public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase theFile)
         {
+			String FileName = "";
+			String FileExtension = "";
+			String ContentType = "";
+
             if (ModelState.IsValid)
             {
-                db.TeacherShareds.Add(teacherShared);
-                db.SaveChanges();
+				if (theFile != null && theFile.ContentLength > 0)
+				{
+					teacherShared.FileName = System.IO.Path.GetFileName(theFile.FileName);
+					FileName = "~/Uploads/TeachersShared/" + teacherShared.TeacherId + "_" + teacherShared.CourseId + "_" + System.IO.Path.GetFileName(theFile.FileName);
+													 
+					theFile.SaveAs(FileName);
+
+					db.TeacherShareds.Add(teacherShared);
+					db.SaveChanges();
+					
+				}
+
                 return RedirectToAction("Index");
             }
 
@@ -64,6 +79,7 @@ namespace LMS_RAM.Controllers
             return View(teacherShared);
         }
 
+		[HttpPost]
         // GET: TeacherShareds/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -124,6 +140,14 @@ namespace LMS_RAM.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+		public ActionResult UploadSharedFile(HttpPostedFileBase file, int courseId, int teacherId)
+		{
+			String path = Server.MapPath("~/Uploads/TeachersShared/" + courseId.ToString() + teacherId.ToString() + file.FileName);
+			file.SaveAs(path);
+
+			return View();
+		}
 
         protected override void Dispose(bool disposing)
         {

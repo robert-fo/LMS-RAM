@@ -297,8 +297,11 @@
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Uploads\" />
+    <Folder Include="App_Data\" />
     <Folder Include="DataAccessLayer\" />
+    <Folder Include="Uploads\Assinments\" />
+    <Folder Include="Uploads\StudentsShared\" />
+    <Folder Include="Uploads\TeachersShared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
