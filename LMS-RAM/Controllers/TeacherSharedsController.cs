@@ -50,33 +50,24 @@ namespace LMS_RAM.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase theFile)
+		//[ValidateAntiForgeryToken]
+		//public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase theFile)
+		public ActionResult Create(HttpPostedFileBase FileName)
         {
-			String FileName = "";
-			String FileExtension = "";
-			String ContentType = "";
+			try
+			{
+					if (FileName != null && FileName.ContentLength > 0)
+					{
+						string filePath = Path.Combine(Server.MapPath("App_Data/Uploads/"), Path.GetFileName(FileName.FileName));
+						FileName.SaveAs(filePath);
+					}
 
-            if (ModelState.IsValid)
-            {
-				if (theFile != null && theFile.ContentLength > 0)
-				{
-					teacherShared.FileName = System.IO.Path.GetFileName(theFile.FileName);
-					FileName = "~/Uploads/TeachersShared/" + teacherShared.TeacherId + "_" + teacherShared.CourseId + "_" + System.IO.Path.GetFileName(theFile.FileName);
-													 
-					theFile.SaveAs(FileName);
-
-					db.TeacherShareds.Add(teacherShared);
-					db.SaveChanges();
-					
-				}
-
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
-            ViewBag.TeacherId = new SelectList(db.Students, "Id", "SSN", teacherShared.TeacherId);
-            return View(teacherShared);
+					return RedirectToAction("Index");
+			}
+			catch
+			{
+				return View();
+			}
         }
 
 		[HttpPost]
