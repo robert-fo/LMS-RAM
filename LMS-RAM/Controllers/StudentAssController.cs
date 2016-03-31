@@ -34,11 +34,29 @@ namespace LMS_RAM.Controllers
             var studentsAll = repository.GetAllStudents();
             var scheduleItemsAll = repository.GetAllScheduleItems();
 
-            var user = User.Identity.GetUserName();
+            //var user = User.Identity.GetUserName();
 
-            var studenten = from student in studentsAll
+            IEnumerable<Student> studenten;// = new List<Student>();
+
+            if (Session["StudentID"] == null)
+            {
+                var user = User.Identity.GetUserName();
+
+                studenten = from student in studentsAll
                             where student.UserName == user
                             select student;
+            }
+            else
+            {
+                int sID = Convert.ToInt32(Session["StudentID"]);
+                studenten = from student in studentsAll
+                            where student.Id == sID
+                            select student;
+            }
+
+            //var studenten = from student in studentsAll
+            //                where student.UserName == user
+            //                select student;
 
             List<Assignment> sAssignments = new List<Assignment>();
             List<Assignment> cAssignments = new List<Assignment>();
