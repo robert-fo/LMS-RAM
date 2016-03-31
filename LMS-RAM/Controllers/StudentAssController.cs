@@ -68,8 +68,8 @@ namespace LMS_RAM.Controllers
 
         // POST: StudentAss/Create
         [HttpPost]
-        //public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
-        public ActionResult Create(HttpPostedFileBase FileName)
+        public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
+        //public ActionResult Create(HttpPostedFileBase FileName)
         {
             try
             {
@@ -80,6 +80,12 @@ namespace LMS_RAM.Controllers
                     FileName.SaveAs(filePath);
                 }
 
+                //if (ModelState.IsValid)
+                //{
+                //    db.Assignments.Add(assignment);
+                //    db.SaveChanges();
+                //    return RedirectToAction("Index");
+                //}
 
                 return RedirectToAction("Index");
             }
