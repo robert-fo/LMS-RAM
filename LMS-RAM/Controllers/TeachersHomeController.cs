@@ -38,12 +38,41 @@ namespace LMS_RAM.Controllers
                           where teacher.UserName == user
                           select teacher;
 
+            ViewBag.TeacherId = lararen.First().Id.ToString();
+
             var tCourses = from course in coursesAll
                           where course.TeacherId == lararen.First().Id
                           orderby course.Id
                           select course;
 
             return View(tCourses);
+        }
+
+        // GET: KlassIndex
+        public ActionResult ClassIndex(int? id)
+        {
+            var studentcoursesAll = repository.GetAllStudentCourses();
+            var studentsAll = repository.GetAllStudents();
+
+            var sCourses = from sCourse in studentcoursesAll
+                           where sCourse.CourseId == id
+                           orderby sCourse.Id
+                           select sCourse;
+
+            List<Student> classstudents = new List<Student>();
+
+            foreach (var item in sCourses)
+            {
+                foreach (var sitem in studentsAll)
+                {
+                    if (sitem.Id == item.StudentId)
+                    {
+                        classstudents.Add(sitem);
+                    }
+                }
+            }
+
+            return View(classstudents);
         }
 
         // GET: TeacherHHome/Details/5
@@ -185,6 +214,51 @@ namespace LMS_RAM.Controllers
                 // TODO: Add delete logic here
                 repository.DeleteCourse(id);
                 return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: StudentsHome/Account/5
+        public ActionResult Account(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var teachersAll = repository.GetAllTeachers();
+
+            var lararen = from teacher in teachersAll
+                            where teacher.Id == id
+                            select teacher;
+
+            var theteacher = lararen.First();
+
+            if (theteacher == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(theteacher);
+        }
+
+        // POST: StudentsHome/Account/5
+        [HttpPost, ActionName("Account")]
+        [ValidateAntiForgeryToken]
+        public ActionResult AccountConfirm(Teacher teacher)
+        {
+            try
+            {
+                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    repository.UpdateDbTeacher(teacher);
+                    return RedirectToAction("Index");
+                }
+                return View(teacher);
             }
             catch
             {

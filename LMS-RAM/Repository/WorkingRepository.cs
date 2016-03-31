@@ -30,6 +30,12 @@ namespace LMS_RAM.Repository
             return teachers;
 		}
 
+        public void UpdateDbTeacher(Teacher teacher)
+        {
+            db.Entry(teacher).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
         public List<Student> GetAllStudents()
         {
             //return (from row in db.Teachers
@@ -43,6 +49,12 @@ namespace LMS_RAM.Repository
             var students = db.Students.ToList();
 
             return students;
+        }
+
+        public void UpdateDbStudent(Student student)
+        {
+            db.Entry(student).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
         }
 
 		public List<Course> GetAllCourses()

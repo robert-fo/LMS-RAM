@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LMS_RAM.Models;
+using System.IO;
 
 namespace LMS_RAM.Controllers
 {
@@ -49,21 +50,27 @@ namespace LMS_RAM.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared)
+		//[ValidateAntiForgeryToken]
+		//public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase theFile)
+		public ActionResult Create(HttpPostedFileBase FileName)
         {
-            if (ModelState.IsValid)
-            {
-                db.TeacherShareds.Add(teacherShared);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+			try
+			{
+					if (FileName != null && FileName.ContentLength > 0)
+					{
+						string filePath = Path.Combine(Server.MapPath("App_Data/Uploads/"), Path.GetFileName(FileName.FileName));
+						FileName.SaveAs(filePath);
+					}
 
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
-            ViewBag.TeacherId = new SelectList(db.Students, "Id", "SSN", teacherShared.TeacherId);
-            return View(teacherShared);
+					return RedirectToAction("Index");
+			}
+			catch
+			{
+				return View();
+			}
         }
 
+		[HttpPost]
         // GET: TeacherShareds/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -124,6 +131,14 @@ namespace LMS_RAM.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+		public ActionResult UploadSharedFile(HttpPostedFileBase file, int courseId, int teacherId)
+		{
+			String path = Server.MapPath("~/Uploads/TeachersShared/" + courseId.ToString() + teacherId.ToString() + file.FileName);
+			file.SaveAs(path);
+
+			return View();
+		}
 
         protected override void Dispose(bool disposing)
         {
