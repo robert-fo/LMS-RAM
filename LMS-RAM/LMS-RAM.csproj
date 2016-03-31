@@ -198,6 +198,7 @@
     <Compile Include="Startup.cs" />
     <Content Include="Views\StudentAss\Index.cshtml" />
     <Content Include="Views\StudentAss\Create.cshtml" />
+    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

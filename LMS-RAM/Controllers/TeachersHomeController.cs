@@ -48,9 +48,39 @@ namespace LMS_RAM.Controllers
             return View(tCourses);
         }
 
-        // GET: KlassIndex
+        // GET: ClassIndex
         public ActionResult ClassIndex(int? id)
         {
+            var studentcoursesAll = repository.GetAllStudentCourses();
+            var studentsAll = repository.GetAllStudents();
+
+            var sCourses = from sCourse in studentcoursesAll
+                           where sCourse.CourseId == id
+                           orderby sCourse.Id
+                           select sCourse;
+
+            List<Student> classstudents = new List<Student>();
+
+            foreach (var item in sCourses)
+            {
+                foreach (var sitem in studentsAll)
+                {
+                    if (sitem.Id == item.StudentId)
+                    {
+                        classstudents.Add(sitem);
+                    }
+                }
+            }
+
+            return View(classstudents);
+        }
+
+        // GET: AssignmentIndex
+        public ActionResult ClassIndex(int? id)
+        {
+            Session["CourseID"] = id;
+            //sId = Covert.ToInt32(Session["CourseID"]);
+
             var studentcoursesAll = repository.GetAllStudentCourses();
             var studentsAll = repository.GetAllStudents();
 
@@ -221,7 +251,7 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentsHome/Account/5
+        // GET: TeacherHHome/Account/5
         public ActionResult Account(int? id)
         {
             if (id == null)
@@ -245,7 +275,7 @@ namespace LMS_RAM.Controllers
             return View(theteacher);
         }
 
-        // POST: StudentsHome/Account/5
+        // POST: TeacherHHome/Account/5
         [HttpPost, ActionName("Account")]
         [ValidateAntiForgeryToken]
         public ActionResult AccountConfirm(Teacher teacher)
@@ -265,5 +295,30 @@ namespace LMS_RAM.Controllers
                 return View();
             }
         }
+
+        // POST: StudentsHome/Assignments/5
+        [HttpPost]
+        public ActionResult Assignments(int? id)
+        {
+
+            Session["StudentID"] = id;
+            return Redirect("StudentAss/Index/"+id);
+
+            //try
+            //{
+            //    // TODO: Add update logic here
+            //    if (ModelState.IsValid)
+            //    {
+            //        repository.UpdateDbTeacher(teacher);
+            //        return RedirectToAction("Index");
+            //    }
+            //    return View(teacher);
+            //}
+            //catch
+            //{
+            //    return View();
+            //}
+        }
+
     }
 }
