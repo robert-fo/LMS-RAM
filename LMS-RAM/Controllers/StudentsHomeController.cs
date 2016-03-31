@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using System.Net;
 
 namespace LMS_RAM.Controllers
 {
@@ -38,6 +39,8 @@ namespace LMS_RAM.Controllers
                       where student.UserName == user
                       select student;
 
+            ViewBag.StudentId = studenten.First().Id.ToString();
+
             var studentcourses = from course in studentcoursesAll
                                  where course.StudentId == studenten.First().Id
                                  orderby course.Id
@@ -60,9 +63,29 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentsHome/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var coursesAll = repository.GetAllCourses();
+
+            //coursesAll.Find
+
+            var tCourses = from course in coursesAll
+                           where course.Id == id
+                           select course;
+
+            var thecourse = tCourses.First();
+
+            if (thecourse == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thecourse);
         }
 
         // GET: StudentsHome/Create
@@ -87,21 +110,44 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentsHome/Edit/5
-        public ActionResult Edit(int id)
+        // GET: StudentsHome/Account/5
+        public ActionResult Account(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentsAll = repository.GetAllStudents();
+
+            var studenten = from student in studentsAll
+                            where student.Id == id
+                            select student;
+
+            var thestudent = studenten.First();
+
+            if (thestudent == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thestudent);
         }
 
-        // POST: StudentsHome/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        // POST: StudentsHome/Account/5
+        [HttpPost, ActionName("Account")]
+        [ValidateAntiForgeryToken]
+        public ActionResult AccountConfirm(Student student)
         {
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    repository.UpdateDbStudent(student);
+                    return RedirectToAction("Index");
+                }
+                return View(student);
             }
             catch
             {

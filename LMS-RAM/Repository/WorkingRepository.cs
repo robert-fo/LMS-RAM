@@ -30,6 +30,12 @@ namespace LMS_RAM.Repository
             return teachers;
 		}
 
+        public void UpdateDbTeacher(Teacher teacher)
+        {
+            db.Entry(teacher).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
         public List<Student> GetAllStudents()
         {
             //return (from row in db.Teachers
@@ -45,6 +51,12 @@ namespace LMS_RAM.Repository
             return students;
         }
 
+        public void UpdateDbStudent(Student student)
+        {
+            db.Entry(student).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
 		public List<Course> GetAllCourses()
 		{
             //return (from row in db.Courses
@@ -58,10 +70,29 @@ namespace LMS_RAM.Repository
             //            TeacherId = row.TeacherId
             //        }).ToList();
 
-            var courses = db.Courses.ToList();
+            List<Course> courses = db.Courses.ToList();
 
             return courses;
 		}
+
+        public void CreateCourse(Course course)
+        {
+            db.Courses.Add(course); 
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void DeleteCourse(int id)
+        {
+            Course course = db.Courses.Find(id);
+            db.Courses.Remove(course);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void UpdateDbCourse(Course course)
+        {
+            db.Entry(course).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
 
         public List<StudentCourse> GetAllStudentCourses()
         {
