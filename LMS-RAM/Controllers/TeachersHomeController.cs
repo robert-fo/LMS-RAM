@@ -51,35 +51,7 @@ namespace LMS_RAM.Controllers
         // GET: ClassIndex
         public ActionResult ClassIndex(int? id)
         {
-            var studentcoursesAll = repository.GetAllStudentCourses();
-            var studentsAll = repository.GetAllStudents();
-
-            var sCourses = from sCourse in studentcoursesAll
-                           where sCourse.CourseId == id
-                           orderby sCourse.Id
-                           select sCourse;
-
-            List<Student> classstudents = new List<Student>();
-
-            foreach (var item in sCourses)
-            {
-                foreach (var sitem in studentsAll)
-                {
-                    if (sitem.Id == item.StudentId)
-                    {
-                        classstudents.Add(sitem);
-                    }
-                }
-            }
-
-            return View(classstudents);
-        }
-
-        // GET: AssignmentIndex
-        public ActionResult ClassIndex(int? id)
-        {
             Session["CourseID"] = id;
-            //sId = Covert.ToInt32(Session["CourseID"]);
 
             var studentcoursesAll = repository.GetAllStudentCourses();
             var studentsAll = repository.GetAllStudents();
@@ -104,6 +76,7 @@ namespace LMS_RAM.Controllers
 
             return View(classstudents);
         }
+
 
         // GET: TeacherHHome/Details/5
         public ActionResult Details(int? id)
@@ -296,28 +269,15 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // POST: StudentsHome/Assignments/5
-        [HttpPost]
+        // GET: TeacherHHome/Assignments/5
+        [HttpGet]
         public ActionResult Assignments(int? id)
         {
 
             Session["StudentID"] = id;
-            return Redirect("StudentAss/Index/"+id);
 
-            //try
-            //{
-            //    // TODO: Add update logic here
-            //    if (ModelState.IsValid)
-            //    {
-            //        repository.UpdateDbTeacher(teacher);
-            //        return RedirectToAction("Index");
-            //    }
-            //    return View(teacher);
-            //}
-            //catch
-            //{
-            //    return View();
-            //}
+            return Redirect("/StudentAss/Index/"+Session["CourseID"]);
+
         }
 
     }

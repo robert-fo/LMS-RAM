@@ -13,7 +13,7 @@ namespace LMS_RAM.Repository
         List<Course> GetAllCourses();
         List<StudentCourse> GetAllStudentCourses();
         List<Assignment> GetAllAssignments();
-        List<ScheduleItem> GetAllScheduleItems()
+        List<ScheduleItem> GetAllScheduleItems();
 
         void CreateCourse(Course course);
         void DeleteCourse(int id);
