@@ -198,6 +198,10 @@
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\WorkingRepository.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Views\TeachersHome\Edit.cshtml" />
+    <Content Include="Views\TeachersHome\Details.cshtml" />
+    <Content Include="Views\TeachersHome\Create.cshtml" />
+    <Content Include="Views\TeachersHome\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

@@ -12,6 +12,9 @@ namespace LMS_RAM.Repository
         List<Student> GetAllStudents();
         List<Course> GetAllCourses();
         List<StudentCourse> GetAllStudentCourses();
+        void CreateCourse(Course course);
+        void DeleteCourse(int id);
+        void UpdateDbCourse(Course course);
 
     }
 }
