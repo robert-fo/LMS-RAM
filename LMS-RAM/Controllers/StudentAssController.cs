@@ -28,10 +28,11 @@ namespace LMS_RAM.Controllers
 
 
         // GET: StudentAss
-        public ActionResult Index()
+        public ActionResult Index(int id = 1)
         {
             var assignmentsAll = repository.GetAllAssignments();
             var studentsAll = repository.GetAllStudents();
+            var scheduleItemsAll = repository.GetAllScheduleItems();
 
             var user = User.Identity.GetUserName();
 
@@ -40,6 +41,8 @@ namespace LMS_RAM.Controllers
                             select student;
 
             List<Assignment> sAssignments = new List<Assignment>();
+            List<Assignment> cAssignments = new List<Assignment>();
+            List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
 
             foreach (var aitem in assignmentsAll)
             {
@@ -49,7 +52,26 @@ namespace LMS_RAM.Controllers
                 }
             }
 
-            return View(sAssignments);
+            foreach (var sitem in scheduleItemsAll)
+            {
+                if (sitem.CourseId == id)
+                {
+                    scheduleItems.Add(sitem);
+                }
+            }
+
+            foreach (var sitem in scheduleItems)
+            {
+                foreach (var aitem in sAssignments)
+                {
+                    if (sitem.Id == aitem.ScheduleItemId)
+                    {
+                        cAssignments.Add(aitem);
+                    }
+                }
+            }
+
+            return View(cAssignments);
         }
 
         // GET: StudentAss/Details/5
@@ -68,8 +90,8 @@ namespace LMS_RAM.Controllers
 
         // POST: StudentAss/Create
         [HttpPost]
-        //public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
-        public ActionResult Create(HttpPostedFileBase FileName)
+        public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
+        //public ActionResult Create(HttpPostedFileBase FileName)
         {
             try
             {
@@ -80,6 +102,12 @@ namespace LMS_RAM.Controllers
                     FileName.SaveAs(filePath);
                 }
 
+                //if (ModelState.IsValid)
+                //{
+                //    db.Assignments.Add(assignment);
+                //    db.SaveChanges();
+                //    return RedirectToAction("Index");
+                //}
 
                 return RedirectToAction("Index");
             }
