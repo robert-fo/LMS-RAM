@@ -32,7 +32,7 @@ namespace LMS_RAM.Controllers
 
         // GET: TeacherShareds
 		[Authorize(Roles = "admin, teacher, student")]
-        public ActionResult Index(int? courseId)
+        public ActionResult Index(int? id)
         {
 			int theUserId = 0;
 
@@ -74,19 +74,19 @@ namespace LMS_RAM.Controllers
 
 			IEnumerable<TeacherShared> tShareds;
 
-			if (isTeacher)
+			if (isTeacher && id != 0 )
 			{
 				tShareds = from teacherShared in teacherShareds
-						   where teacherShared.TeacherId == theUserId
+						   where teacherShared.TeacherId == theUserId && teacherShared.CourseId == id
 						   orderby teacherShared.CourseId, teacherShared.Id
 						   select teacherShared;
 			}
 			else
 			{
-				if (isStudent && courseId != 0)
+				if (isStudent && id != 0)
 				{
 					tShareds = from teacherShared in teacherShareds
-							   where teacherShared.CourseId == courseId
+							   where teacherShared.CourseId == id
 							   orderby teacherShared.CourseId, teacherShared.Id
 							   select teacherShared;
 				}
