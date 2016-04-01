@@ -16,11 +16,11 @@ namespace LMS_RAM.Models
 		public int TeacherId { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
-        [Display(Name = "Beskrivning")]
+        [Display(Name = "Description")]
         public String Description { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 tecken")]
-        [Display(Name = "Filnamn")]
+        [Display(Name = "File name")]
         public String FileName { get; set; }
 
         [ForeignKey("CourseId")]
