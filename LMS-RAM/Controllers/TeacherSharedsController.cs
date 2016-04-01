@@ -32,7 +32,7 @@ namespace LMS_RAM.Controllers
 
         // GET: TeacherShareds
 		[Authorize(Roles = "admin, teacher, student")]
-        public ActionResult Index()
+        public ActionResult Index(int? courseId)
         {
 			int theUserId = 0;
 
@@ -67,14 +67,35 @@ namespace LMS_RAM.Controllers
 
 			// Sort out the Shared files per teacher
 			// -------------------------------------
+			
+			//var tShareds = repository.GetTeacherShareds(theUserId);
             var teacherShareds = 
 				db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
 
-			var tShareds = from teacherShared in teacherShareds
+			IEnumerable<TeacherShared> tShareds;
+
+			if (isTeacher)
+			{
+				tShareds = from teacherShared in teacherShareds
 						   where teacherShared.TeacherId == theUserId
 						   orderby teacherShared.CourseId, teacherShared.Id
 						   select teacherShared;
-
+			}
+			else
+			{
+				if (isStudent && courseId != 0)
+				{
+					tShareds = from teacherShared in teacherShareds
+							   where teacherShared.CourseId == courseId
+							   orderby teacherShared.CourseId, teacherShared.Id
+							   select teacherShared;
+				}
+				else
+				{
+					tShareds = null;
+				}
+			}
+			
 			//return View(teacherShareds.ToList());
 			return View(tShareds.ToList());
         }
