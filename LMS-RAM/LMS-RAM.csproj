@@ -299,7 +299,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="DataAccessLayer\" />
-    <Folder Include="Uploads\Assinments\" />
+    <Folder Include="Uploads\Assignments\" />
     <Folder Include="Uploads\StudentsShared\" />
     <Folder Include="Uploads\TeachersShared\" />
   </ItemGroup>

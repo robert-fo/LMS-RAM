@@ -42,7 +42,7 @@ namespace LMS_RAM.Controllers
         public ActionResult Create()
         {
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
-            ViewBag.TeacherId = new SelectList(db.Students, "Id", "SSN");
+            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN");
             return View();
         }
 
@@ -51,23 +51,35 @@ namespace LMS_RAM.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
 		//[ValidateAntiForgeryToken]
-		//public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase theFile)
-		public ActionResult Create(HttpPostedFileBase FileName)
+		public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase FileName)
+		//public ActionResult Create(HttpPostedFileBase FileName)
         {
 			try
 			{
-					if (FileName != null && FileName.ContentLength > 0)
-					{
-						string filePath = Path.Combine(Server.MapPath("App_Data/Uploads/"), Path.GetFileName(FileName.FileName));
-						FileName.SaveAs(filePath);
-					}
 
-					return RedirectToAction("Index");
+				if (FileName != null && FileName.ContentLength > 0)
+				{
+					string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + Path.GetFileName(FileName.FileName));
+					
+					if (!System.IO.File.Exists(filePath))
+					{
+						if (ModelState.IsValid)
+						{
+							FileName.SaveAs(filePath);
+							teacherShared.FileName = Path.GetFileName(FileName.FileName);
+							db.TeacherShareds.Add(teacherShared);
+							db.SaveChanges();
+							return RedirectToAction("Index");
+						}
+
+					}
+				}
 			}
 			catch
 			{
-				return View();
+				return RedirectToAction("Index");
 			}
+			return RedirectToAction("Index");
         }
 
 		[HttpPost]
@@ -84,7 +96,7 @@ namespace LMS_RAM.Controllers
                 return HttpNotFound();
             }
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
-            ViewBag.TeacherId = new SelectList(db.Students, "Id", "SSN", teacherShared.TeacherId);
+            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN", teacherShared.TeacherId);
             return View(teacherShared);
         }
 
@@ -102,7 +114,7 @@ namespace LMS_RAM.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
-            ViewBag.TeacherId = new SelectList(db.Students, "Id", "SSN", teacherShared.TeacherId);
+            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN", teacherShared.TeacherId);
             return View(teacherShared);
         }
 
@@ -118,6 +130,7 @@ namespace LMS_RAM.Controllers
             {
                 return HttpNotFound();
             }
+			
             return View(teacherShared);
         }
 
@@ -129,15 +142,46 @@ namespace LMS_RAM.Controllers
             TeacherShared teacherShared = db.TeacherShareds.Find(id);
             db.TeacherShareds.Remove(teacherShared);
             db.SaveChanges();
+			// remove the file also
+			//String filePath = "~/Uploads/TeachersShared/" + teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName.ToString();
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName);
+
+			try
+			{
+				if (System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
+			}
+			catch (Exception e)
+			{
+				int ett = 1;
+			}
+
             return RedirectToAction("Index");
         }
 
-		public ActionResult UploadSharedFile(HttpPostedFileBase file, int courseId, int teacherId)
+		public ActionResult Download(int id)
 		{
-			String path = Server.MapPath("~/Uploads/TeachersShared/" + courseId.ToString() + teacherId.ToString() + file.FileName);
-			file.SaveAs(path);
-
-			return View();
+			TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName);
+			
+			try
+			{
+				if (System.IO.File.Exists(filePath))
+				{
+					return File(filePath, "application/pdf");
+					//return File(teacherShared.FileName, "application/pdf", filePath);
+				}
+				else 
+				{
+					return HttpNotFound("File not found");
+				}
+			}
+			catch (Exception e)
+			{
+				return RedirectToAction("Index");
+			}		
 		}
 
         protected override void Dispose(bool disposing)
