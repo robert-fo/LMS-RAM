@@ -172,6 +172,7 @@
     <Compile Include="Controllers\TeachersHomeController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TeacherSharedsController.cs" />
+    <Compile Include="Controllers\TeachersManageStudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -198,6 +199,20 @@
     <Compile Include="Startup.cs" />
     <Content Include="Views\StudentAss\Index.cshtml" />
     <Content Include="Views\StudentAss\Create.cshtml" />
+    <Content Include="Views\TeachersManageStudents\Index.cshtml" />
+    <Content Include="Views\TeachersManageStudents\Details.cshtml" />
+    <Content Include="Views\TeachersManageStudents\Create.cshtml" />
+    <Content Include="Views\TeachersManageStudents\Delete.cshtml" />
+    <Content Include="Views\TeachersManageStudents\Edit.cshtml" />
+    <Content Include="Views\TeachersHome\Account.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
+    <Content Include="Views\TeachersHome\Create.cshtml" />
+    <Content Include="Views\TeachersHome\Delete.cshtml" />
+    <Content Include="Views\TeachersHome\Details.cshtml" />
+    <Content Include="Views\TeachersHome\Edit.cshtml" />
+    <Content Include="Views\TeachersHome\AddStudentCourse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

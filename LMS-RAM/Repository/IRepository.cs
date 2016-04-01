@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace LMS_RAM.Repository
 {
@@ -19,9 +20,19 @@ namespace LMS_RAM.Repository
         void DeleteCourse(int id);
         void UpdateDbCourse(Course course);
 
+        void CreateStudent(Student student);
+        void DeleteStudent(int id);
         void UpdateDbStudent(Student student);
 
+        void AddStudentUser(ApplicationUser user);
+
+        void CreateStudentCourse(StudentCourse studentcourse);
+        void DeleteStudentCourse(int id);
+        void UpdateDbStudentCourse(StudentCourse studentcourse);
+
         void UpdateDbTeacher(Teacher teacher);
+
+        IEnumerable<SelectListItem> GetSelectListStudenter();
 
     }
 }
