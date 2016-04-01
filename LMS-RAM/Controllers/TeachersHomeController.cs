@@ -48,36 +48,6 @@ namespace LMS_RAM.Controllers
             return View(tCourses);
         }
 
-        // GET: ClassIndex
-        public ActionResult ClassIndex(int? id)
-        {
-            Session["CourseID"] = id;
-
-            var studentcoursesAll = repository.GetAllStudentCourses();
-            var studentsAll = repository.GetAllStudents();
-
-            var sCourses = from sCourse in studentcoursesAll
-                           where sCourse.CourseId == id
-                           orderby sCourse.Id
-                           select sCourse;
-
-            List<Student> classstudents = new List<Student>();
-
-            foreach (var item in sCourses)
-            {
-                foreach (var sitem in studentsAll)
-                {
-                    if (sitem.Id == item.StudentId)
-                    {
-                        classstudents.Add(sitem);
-                    }
-                }
-            }
-
-            return View(classstudents);
-        }
-
-
         // GET: TeacherHHome/Details/5
         public ActionResult Details(int? id)
         {
@@ -269,16 +239,196 @@ namespace LMS_RAM.Controllers
             }
         }
 
+        // GET: ClassIndex
+        public ActionResult ClassIndex(int? id)
+        {
+            Session["CourseID"] = id;
+
+            var studentcoursesAll = repository.GetAllStudentCourses();
+            var studentsAll = repository.GetAllStudents();
+
+            var sCourses = from sCourse in studentcoursesAll
+                           where sCourse.CourseId == id
+                           orderby sCourse.Id
+                           select sCourse;
+
+            List<Student> classstudents = new List<Student>();
+
+            foreach (var item in sCourses)
+            {
+                foreach (var sitem in studentsAll)
+                {
+                    if (sitem.Id == item.StudentId)
+                    {
+                        classstudents.Add(sitem);
+                    }
+                }
+            }
+
+            return View(classstudents);
+        }
+
+        // GET: TeacherHHome/DetailsStudent/5
+        public ActionResult DetailsStudent(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentsAll = repository.GetAllStudents();
+
+            //coursesAll.Find
+
+            var tstudents = from s in studentsAll
+                           where s.Id == id
+                           select s;
+
+            var thestudent = tstudents.First();
+
+            if (thestudent == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thestudent);
+        }
+
+        // GET: TeacherHHome/AddStudentCourse
+        public ActionResult AddStudentCourse()
+        {
+            ViewBag.CourseId = Session["CourseID"];
+            ViewBag.StudentID = repository.GetSelectListStudenter(Convert.ToInt32(Session["CourseID"]));
+
+            return View();
+        }
+
+        // POST: TeacherHHome/AddStudentCourse
+        [HttpPost, ActionName("AddStudentCourse")]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddStudentCourseConfirm(StudentCourse studentcourse)
+        {
+            try
+            {
+                // TODO: Add insert logic here
+                repository.CreateStudentCourse(studentcourse);
+                return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: TeacherHHome/EditStudentCourse/5
+        public ActionResult EditStudentCourse(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentCoursesAll = repository.GetAllStudentCourses();
+            int cId = Convert.ToInt32(Session["CourseID"]);
+
+            var tCourses = from s in studentCoursesAll
+                           where s.StudentId == id
+                           && s.CourseId == cId
+                           select s;
+
+            var thestudentcourse = tCourses.First();
+
+            if (thestudentcourse == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thestudentcourse);
+        }
+
+        // POST: TeacherHHome/EditStudentCourse/5
+        [HttpPost, ActionName("EditStudentCourse")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditStudentCourseConfirm(StudentCourse studentcourse)
+        {
+            try
+            {
+                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    repository.UpdateDbStudentCourse(studentcourse);
+                    return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+                }
+                return View(studentcourse);
+            }
+            catch
+            {
+                return View(studentcourse);
+            }
+        }
+
+        // GET: TeacherHHome/DeleteStudentCourse/5
+        public ActionResult DeleteStudentCourse(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentCoursesAll = repository.GetAllStudentCourses();
+            int cId = Convert.ToInt32(Session["CourseID"]);
+
+            var tsCourses = from s in studentCoursesAll
+                           where s.StudentId == id
+                           && s.CourseId == cId
+                           select s;
+
+            var thestudentcourse = tsCourses.First();
+
+            if (thestudentcourse == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thestudentcourse);
+        }
+
+        // POST: TeacherHHome/DeleteStudent/5
+        [HttpPost, ActionName("DeleteStudentCourse")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteStudentCourseConfirm(int id)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+                repository.DeleteStudentCourse(id);
+                return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         // GET: TeacherHHome/Assignments/5
-        [HttpGet]
-        public ActionResult Assignments(int? id)
+        public ActionResult AssignmentsStudent(int? id)
         {
 
             Session["StudentID"] = id;
 
-            return Redirect("/StudentAss/Index/"+Session["CourseID"]);
+            return Redirect("/StudentAss/Index/" + Session["CourseID"]);
 
         }
 
+        // GET: TeacherHHome/Assignments/5
+        public ActionResult TeacherShared(int? id)
+        {
+
+            Session["StudentID"] = id;
+
+            return Redirect("/TeacherShareds/Index/"); // + Session["CourseID"]
+
+        }
     }
 }

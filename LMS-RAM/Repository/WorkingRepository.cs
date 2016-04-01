@@ -1,8 +1,11 @@
 ﻿using LMS_RAM.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace LMS_RAM.Repository
 {
@@ -51,6 +54,19 @@ namespace LMS_RAM.Repository
             return students;
         }
 
+        public void CreateStudent(Student student)
+        {
+            db.Students.Add(student);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void DeleteStudent(int id)
+        {
+            Student student = db.Students.Find(id);
+            db.Students.Remove(student);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
         public void UpdateDbStudent(Student student)
         {
             db.Entry(student).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
@@ -96,21 +112,37 @@ namespace LMS_RAM.Repository
 
         public List<StudentCourse> GetAllStudentCourses()
         {
- 
-            //var queryStudentCourses = (from row in db.StudentCourses
-            //                           join S in db.Students on row.StudentId equals S.Id
-            //                           where row.CourseId == courseId
-            //                           select new Student {
-            //                               FirstName = S.FirstName, 
-            //                               LastName = S.LastName, 
-            //                               SSN = S.SSN 
-            //                           }).ToList();
-
-            //return queryStudentCourses;
-
             var studentcourses = db.StudentCourses.ToList();
 
             return studentcourses;
+        }
+
+        public void CreateStudentCourse(StudentCourse studentcourse)
+        {
+            db.StudentCourses.Add(studentcourse);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void DeleteStudentCourse(int id)
+        {
+            StudentCourse studentcourse = db.StudentCourses.Find(id);
+            db.StudentCourses.Remove(studentcourse);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void UpdateDbStudentCourse(StudentCourse studentcourse)
+        {
+            db.Entry(studentcourse).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
+        public void AddStudentUser(ApplicationUser user)
+        {
+            var userStore = new UserStore<ApplicationUser>(db);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+
+            userManager.Create(user, "Pass#1");
+            userManager.AddToRole(user.Id, "student");
         }
 
         public List<Assignment> GetAllAssignments()
@@ -125,6 +157,61 @@ namespace LMS_RAM.Repository
             var scheduleItems = db.ScheduleItems.ToList();
 
             return scheduleItems;
+        }
+
+        public IEnumerable<SelectListItem> GetSelectListStudenter(int? id)
+        {
+            var selectList = new List<SelectListItem>();
+
+            // Get all values of the Industry enum
+            var Students = GetAllStudents();
+            var StudentCourses = GetAllStudentCourses();
+
+            selectList.Add(new SelectListItem
+            {
+                Value = "NONE",
+                Text = "None"
+            });
+
+            if (id == null)
+            {
+                foreach (var item in Students)
+                {
+                    selectList.Add(new SelectListItem
+                    {
+                        Value = item.Id.ToString(),
+                        Text = item.SSN //item.FirstName + " " + item.LastName
+                    });
+                }
+            }
+            else
+            {
+                bool isInCourse = false;
+
+                foreach (var sItem in Students)
+                {
+                    // Check if student is already in course
+                    foreach (var scItem in StudentCourses) {
+                        if (scItem.CourseId == id && scItem.StudentId == sItem.Id)
+                        {
+                            isInCourse = true;
+                        }
+                    }
+
+                    if (isInCourse == false)
+                    {
+                        selectList.Add(new SelectListItem
+                        {
+                            Value = sItem.Id.ToString(),
+                            Text = sItem.SSN //sItem.FirstName + " " + sItem.LastName
+                        });
+                    }
+
+                    isInCourse = false;
+                }
+            }
+
+            return selectList;
         }
 
     }
