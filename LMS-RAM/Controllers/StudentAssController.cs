@@ -28,7 +28,7 @@ namespace LMS_RAM.Controllers
 
 
         // GET: StudentAss
-        public ActionResult Index(int id = 1)
+        public ActionResult Index(int courseId = 2)
         {
             var assignmentsAll = repository.GetAllAssignments();
             var studentsAll = repository.GetAllStudents();
@@ -38,6 +38,9 @@ namespace LMS_RAM.Controllers
 
             IEnumerable<Student> studenten;// = new List<Student>();
 
+            if (Session["CourseID"] == null)
+                Session["CourseID"] = courseId;
+
             if (Session["StudentID"] == null)
             {
                 var user = User.Identity.GetUserName();
@@ -45,6 +48,8 @@ namespace LMS_RAM.Controllers
                 studenten = from student in studentsAll
                             where student.UserName == user
                             select student;
+
+                Session["StudentID"] = studenten.First().Id;
             }
             else
             {
@@ -72,7 +77,7 @@ namespace LMS_RAM.Controllers
 
             foreach (var sitem in scheduleItemsAll)
             {
-                if (sitem.CourseId == id)
+                if (sitem.CourseId == courseId)
                 {
                     scheduleItems.Add(sitem);
                 }
@@ -109,17 +114,25 @@ namespace LMS_RAM.Controllers
         // POST: StudentAss/Create
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
-        //public ActionResult Create(HttpPostedFileBase FileName)
         {
             try
             {
                 // TODO: Add insert logic here
-                if (FileName != null && FileName.ContentLength > 0)
+                assignment.FileName = FileName.FileName;
+
+                if (ModelState.IsValid)
                 {
-                    string filePath = Path.Combine(Server.MapPath("~/App_Data/Uploads"), Path.GetFileName(FileName.FileName));
-                    FileName.SaveAs(filePath);
+                    repository.CreateAssignment(assignment);
+                    //return RedirectToAction("Index");
                 }
 
+                if (FileName != null && FileName.ContentLength > 0)
+                {
+                    //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
+                    string filepath1 = Path.GetFileName(FileName.FileName);
+                    string filePath2 = Server.MapPath("~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
+                    FileName.SaveAs(filePath2);
+                }
                 //if (ModelState.IsValid)
                 //{
                 //    db.Assignments.Add(assignment);
@@ -133,6 +146,17 @@ namespace LMS_RAM.Controllers
             {
                 return View();
             }
+        }
+
+        public FileResult Download(Assignment assignment)
+        {
+            string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" + assignment.Id + "_" + assignment.FileName;
+            string contentType = "application/pdf";
+
+            return new FilePathResult(fileName, contentType)
+            {
+                FileDownloadName = assignment.FileName
+            };
         }
 
         // GET: StudentAss/Edit/5

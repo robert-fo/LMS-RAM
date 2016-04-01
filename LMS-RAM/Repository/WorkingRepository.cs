@@ -113,5 +113,19 @@ namespace LMS_RAM.Repository
             return studentcourses;
         }
 
+        public List<Assignment> GetAllAssignments()
+        {
+            var assignments = db.Assignments.ToList();
+
+            return assignments;
+        }
+
+        public List<ScheduleItem> GetAllScheduleItems()
+        {
+            var scheduleItems = db.ScheduleItems.ToList();
+
+            return scheduleItems;
+        }
+
     }
 }

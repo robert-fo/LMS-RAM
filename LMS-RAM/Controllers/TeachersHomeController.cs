@@ -48,9 +48,11 @@ namespace LMS_RAM.Controllers
             return View(tCourses);
         }
 
-        // GET: KlassIndex
+        // GET: ClassIndex
         public ActionResult ClassIndex(int? id)
         {
+            Session["CourseID"] = id;
+
             var studentcoursesAll = repository.GetAllStudentCourses();
             var studentsAll = repository.GetAllStudents();
 
@@ -74,6 +76,7 @@ namespace LMS_RAM.Controllers
 
             return View(classstudents);
         }
+
 
         // GET: TeacherHHome/Details/5
         public ActionResult Details(int? id)
@@ -221,7 +224,7 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentsHome/Account/5
+        // GET: TeacherHHome/Account/5
         public ActionResult Account(int? id)
         {
             if (id == null)
@@ -245,7 +248,7 @@ namespace LMS_RAM.Controllers
             return View(theteacher);
         }
 
-        // POST: StudentsHome/Account/5
+        // POST: TeacherHHome/Account/5
         [HttpPost, ActionName("Account")]
         [ValidateAntiForgeryToken]
         public ActionResult AccountConfirm(Teacher teacher)
@@ -265,5 +268,17 @@ namespace LMS_RAM.Controllers
                 return View();
             }
         }
+
+        // GET: TeacherHHome/Assignments/5
+        [HttpGet]
+        public ActionResult Assignments(int? id)
+        {
+
+            Session["StudentID"] = id;
+
+            return Redirect("/StudentAss/Index/"+Session["CourseID"]);
+
+        }
+
     }
 }

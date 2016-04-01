@@ -206,6 +206,8 @@
     <Content Include="Views\TeachersHome\Delete.cshtml" />
     <Content Include="Views\TeachersHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Edit.cshtml" />
+    <Content Include="Uploads\Assignments\1_2\1_1_Inlämningsuppgift1.pdf" />
+    <Content Include="Uploads\Assignments\1_2\2_2_Inlämning_1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -307,7 +309,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="DataAccessLayer\" />
-    <Folder Include="Uploads\Assinments\" />
+    <Folder Include="Uploads\Assignments\2_1\" />
+    <Folder Include="Uploads\Assignments\2_2\" />
     <Folder Include="Uploads\StudentsShared\" />
     <Folder Include="Uploads\TeachersShared\" />
   </ItemGroup>

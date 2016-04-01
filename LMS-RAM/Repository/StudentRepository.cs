@@ -35,5 +35,11 @@ namespace LMS_RAM.Repository
 
             return scheduleItems;
         }
+
+        public void CreateAssignment(Assignment assignment)
+        {
+            db.Assignments.Add(assignment);
+            db.SaveChanges(); // Updates all changed objects
+        }
     }
 }
