@@ -181,8 +181,6 @@ namespace LMS_RAM.Controllers
         public ActionResult TeacherShared(int? id)
         {
 
-            Session["StudentID"] = id;
-
             return Redirect("/TeacherShareds/Index/" + id.ToString()); // 
 
         }
