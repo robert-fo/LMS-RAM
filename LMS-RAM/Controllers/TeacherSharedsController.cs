@@ -1,29 +1,86 @@
-﻿using System;
+﻿using LMS_RAM.Models;
+using LMS_RAM.Repository;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using LMS_RAM.Models;
-using System.IO;
+
 
 namespace LMS_RAM.Controllers
 {
-    [Authorize(Roles = "admin")]
+
     public class TeacherSharedsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+		private IRepository repository;
+
+		public TeacherSharedsController ()
+		{
+			repository = new WorkingRepository();
+		}
+
+		public TeacherSharedsController (IRepository rep)
+		{
+			repository = rep;
+		}
 
         // GET: TeacherShareds
+		[Authorize(Roles = "admin, teacher, student")]
         public ActionResult Index()
         {
-            var teacherShareds = db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
-            return View(teacherShareds.ToList());
+			int theUserId = 0;
+
+			// Authenticate the User and Role
+			// ---------------------
+			var user = User.Identity.GetUserName();
+			bool isTeacher = User.IsInRole("teacher");
+			bool isStudent = User.IsInRole("student");
+
+			// select the teachers all Shared files
+			if (isTeacher)
+			{
+				var teachersAll = repository.GetAllTeachers();
+
+				var theUser = from teacher in teachersAll
+						      where teacher.UserName == user
+					          select teacher;
+				ViewBag.TeacherId = theUser.First().Id.ToString();
+				theUserId = theUser.First().Id;
+			}
+			else if (isStudent)
+			{
+				var studentsAll = repository.GetAllStudents();
+
+				var theUser = from student in studentsAll
+						      where student.UserName == user
+						      select student;
+				ViewBag.StudentId = theUser.First().Id.ToString();
+				theUserId = theUser.First().Id;
+			}
+			
+
+			// Sort out the Shared files per teacher
+			// -------------------------------------
+            var teacherShareds = 
+				db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
+
+			var tShareds = from teacherShared in teacherShareds
+						   where teacherShared.TeacherId == theUserId
+						   orderby teacherShared.CourseId, teacherShared.Id
+						   select teacherShared;
+
+			//return View(teacherShareds.ToList());
+			return View(tShareds.ToList());
         }
 
         // GET: TeacherShareds/Details/5
+		[Authorize(Roles = "admin, teacher")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -39,10 +96,38 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: TeacherShareds/Create
+		[Authorize(Roles = "teacher")]
         public ActionResult Create()
         {
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN");
+			int theUserId = 0;
+
+			// Authenticate the User and Role
+			// ---------------------
+			var user = User.Identity.GetUserName();
+			bool isTeacher = User.IsInRole("teacher");
+	
+			// select the teachers all Shared files
+			if (isTeacher)
+			{
+				var teachersAll = repository.GetAllTeachers();
+
+				var theUser = from teacher in teachersAll
+							  where teacher.UserName == user
+							  select teacher;
+	
+				theUserId = theUser.First().Id;
+				ViewBag.TeacherId = new SelectList(theUser, "Id", "SSN");
+			}
+
+			var coursesAll = repository.GetAllCourses();
+			var teachersCourses = from course in coursesAll
+                                  where course.TeacherId == theUserId
+								  orderby course.Id
+                                  select course;
+
+            //ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+			ViewBag.CourseId = new SelectList(teachersCourses, "Id", "Name");
+			
             return View();
         }
 
@@ -51,6 +136,7 @@ namespace LMS_RAM.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
 		//[ValidateAntiForgeryToken]
+		[Authorize(Roles = "teacher")]
 		public ActionResult Create([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase FileName)
 		//public ActionResult Create(HttpPostedFileBase FileName)
         {
@@ -59,7 +145,7 @@ namespace LMS_RAM.Controllers
 
 				if (FileName != null && FileName.ContentLength > 0)
 				{
-					string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + Path.GetFileName(FileName.FileName));
+					string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" + teacherShared.CourseId.ToString() + "_" + Path.GetFileName(FileName.FileName));
 					
 					if (!System.IO.File.Exists(filePath))
 					{
@@ -77,13 +163,15 @@ namespace LMS_RAM.Controllers
 			}
 			catch
 			{
-				return RedirectToAction("Index");
+				return View();
+				//return RedirectToAction("Index");
 			}
 			return RedirectToAction("Index");
         }
 
 		[HttpPost]
         // GET: TeacherShareds/Edit/5
+		[Authorize(Roles = "teacher")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -105,6 +193,7 @@ namespace LMS_RAM.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+		[Authorize(Roles = "teacher")]
         public ActionResult Edit([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared)
         {
             if (ModelState.IsValid)
@@ -119,6 +208,7 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: TeacherShareds/Delete/5
+		[Authorize(Roles = "admin, teacher")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -135,6 +225,7 @@ namespace LMS_RAM.Controllers
         }
 
         // POST: TeacherShareds/Delete/5
+		[Authorize(Roles = "admin, teacher")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -143,8 +234,7 @@ namespace LMS_RAM.Controllers
             db.TeacherShareds.Remove(teacherShared);
             db.SaveChanges();
 			// remove the file also
-			//String filePath = "~/Uploads/TeachersShared/" + teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName.ToString();
-			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName);
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" + teacherShared.CourseId.ToString() + "_" + teacherShared.FileName);
 
 			try
 			{
@@ -161,17 +251,17 @@ namespace LMS_RAM.Controllers
             return RedirectToAction("Index");
         }
 
+		[Authorize(Roles = "admin, teacher, student")]
 		public ActionResult Download(int id)
 		{
 			TeacherShared teacherShared = db.TeacherShareds.Find(id);
-			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.CourseId.ToString() + "_" + teacherShared.TeacherId.ToString() + "_" + teacherShared.FileName);
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" + teacherShared.CourseId.ToString() + "_" + teacherShared.FileName);
 			
 			try
 			{
 				if (System.IO.File.Exists(filePath))
 				{
 					return File(filePath, "application/pdf");
-					//return File(teacherShared.FileName, "application/pdf", filePath);
 				}
 				else 
 				{
