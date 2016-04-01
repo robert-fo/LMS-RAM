@@ -44,8 +44,7 @@
             @Html.ActionLink("Edit", "EditStudent", new { id=item.Id }) |
             @Html.ActionLink("Details", "DetailsStudent", new { id=item.Id }) |
             @Html.ActionLink("Delete", "DeleteStudent", new { id=item.Id }) |
-            @Html.ActionLink("Assignments", "AssignmentsStudent", new { id = item.Id }) |
-            @Html.ActionLink("Your Uploads", "TeacherShared", new { id = Session["CourseID"] })
+            @Html.ActionLink("Assignments", "AssignmentsStudent", new { id = item.Id })
         </td>
     </tr>
 }

@@ -10,7 +10,7 @@ using System.Net;
 
 namespace LMS_RAM.Controllers
 {
-    [Authorize]
+     [Authorize(Roles = "student")]
     public class StudentsHomeController : Controller
     {
  
@@ -183,7 +183,7 @@ namespace LMS_RAM.Controllers
 
             Session["StudentID"] = id;
 
-            return Redirect("/TeacherShareds/Index/"); // + id.ToString()
+            return Redirect("/TeacherShareds/Index/" + id.ToString()); // 
 
         }
     }

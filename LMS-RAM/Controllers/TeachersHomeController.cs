@@ -10,7 +10,7 @@ using System.Net;
 
 namespace LMS_RAM.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "teacher")]
     public class TeachersHomeController : Controller
     {
         private IRepository repository;
@@ -427,7 +427,7 @@ namespace LMS_RAM.Controllers
 
             Session["StudentID"] = id;
 
-            return Redirect("/TeacherShareds/Index/"); // + Session["CourseID"]
+            return Redirect("/TeacherShareds/Index/" + Session["CourseID"]); // 
 
         }
     }
