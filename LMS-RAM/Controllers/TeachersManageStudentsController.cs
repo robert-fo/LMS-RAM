@@ -33,7 +33,7 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: TeachersManageStudents/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {

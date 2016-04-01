@@ -180,7 +180,7 @@ namespace LMS_RAM.Repository
                     selectList.Add(new SelectListItem
                     {
                         Value = item.Id.ToString(),
-                        Text = item.FirstName + " " + item.LastName
+                        Text = item.SSN //item.FirstName + " " + item.LastName
                     });
                 }
             }
@@ -203,7 +203,7 @@ namespace LMS_RAM.Repository
                         selectList.Add(new SelectListItem
                         {
                             Value = sItem.Id.ToString(),
-                            Text = sItem.FirstName + " " + sItem.LastName
+                            Text = sItem.SSN //sItem.FirstName + " " + sItem.LastName
                         });
                     }
 

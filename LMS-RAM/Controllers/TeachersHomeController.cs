@@ -298,7 +298,7 @@ namespace LMS_RAM.Controllers
         public ActionResult AddStudentCourse()
         {
             ViewBag.CourseId = Session["CourseID"];
-            ViewBag.StudentID = repository.GetSelectListStudenter();
+            ViewBag.StudentID = repository.GetSelectListStudenter(Convert.ToInt32(Session["CourseID"]));
 
             return View();
         }
@@ -421,5 +421,14 @@ namespace LMS_RAM.Controllers
 
         }
 
+        // GET: TeacherHHome/Assignments/5
+        public ActionResult TeacherShared(int? id)
+        {
+
+            Session["StudentID"] = id;
+
+            return Redirect("/TeacherShareds/Index/"); // + Session["CourseID"]
+
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace LMS_RAM.Repository
 
         void UpdateDbTeacher(Teacher teacher);
 
-        IEnumerable<SelectListItem> GetSelectListStudenter();
+        IEnumerable<SelectListItem> GetSelectListStudenter(int? id);
 
     }
 }
