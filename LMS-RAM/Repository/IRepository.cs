@@ -30,9 +30,11 @@ namespace LMS_RAM.Repository
         void DeleteStudentCourse(int id);
         void UpdateDbStudentCourse(StudentCourse studentcourse);
 
-        void UpdateDbTeacher(Teacher teacher);
+        void CreateScheduleItems(ScheduleItem scheduleitem);
+        void DeleteScheduleItems(int id);
+        void UpdateDbScheduleItems(ScheduleItem scheduleitem);
 
-        IEnumerable<SelectListItem> GetSelectListStudenter(int? id);
+        void UpdateDbTeacher(Teacher teacher);
 
     }
 }

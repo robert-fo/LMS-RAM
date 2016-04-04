@@ -159,60 +159,23 @@ namespace LMS_RAM.Repository
             return scheduleItems;
         }
 
-        public IEnumerable<SelectListItem> GetSelectListStudenter(int? id)
+        public void CreateScheduleItems(ScheduleItem scheduleitem)
         {
-            var selectList = new List<SelectListItem>();
-
-            // Get all values of the Industry enum
-            var Students = GetAllStudents();
-            var StudentCourses = GetAllStudentCourses();
-
-            selectList.Add(new SelectListItem
-            {
-                Value = "NONE",
-                Text = "None"
-            });
-
-            if (id == null)
-            {
-                foreach (var item in Students)
-                {
-                    selectList.Add(new SelectListItem
-                    {
-                        Value = item.Id.ToString(),
-                        Text = item.SSN //item.FirstName + " " + item.LastName
-                    });
-                }
-            }
-            else
-            {
-                bool isInCourse = false;
-
-                foreach (var sItem in Students)
-                {
-                    // Check if student is already in course
-                    foreach (var scItem in StudentCourses) {
-                        if (scItem.CourseId == id && scItem.StudentId == sItem.Id)
-                        {
-                            isInCourse = true;
-                        }
-                    }
-
-                    if (isInCourse == false)
-                    {
-                        selectList.Add(new SelectListItem
-                        {
-                            Value = sItem.Id.ToString(),
-                            Text = sItem.SSN //sItem.FirstName + " " + sItem.LastName
-                        });
-                    }
-
-                    isInCourse = false;
-                }
-            }
-
-            return selectList;
+            db.ScheduleItems.Add(scheduleitem);
+            db.SaveChanges(); // Updates all changed objects
         }
 
+        public void DeleteScheduleItems(int id)
+        {
+            StudentCourse studentcourse = db.StudentCourses.Find(id);
+            db.StudentCourses.Remove(studentcourse);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void UpdateDbScheduleItems(ScheduleItem scheduleitem)
+        {
+            db.Entry(scheduleitem).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
     }
 }

@@ -190,5 +190,66 @@ namespace LMS_RAM.Controllers
             return Redirect("/TeacherShareds/Index/" + id.ToString()); // 
 
         }
+
+        public ActionResult CourseStudents(int? id)
+        {
+            Session["StudentCourseID"] = id;
+            List<Student> classstudents = new List<Student>();
+            BusinessLogic blogic = new BusinessLogic();
+            classstudents = blogic.StudentsInCourse(id);
+
+            return View(classstudents);
+        }
+
+        // GET: StudentsHome/StudentDetails/5
+        public ActionResult StudentDetails(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentsAll = repository.GetAllStudents();
+
+            //coursesAll.Find
+
+            var tStudents = from s in studentsAll
+                           where s.Id == id
+                           select s;
+
+            var thestudent = tStudents.First();
+
+            if (thestudent == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(thestudent);
+        }
+
+       // GET: StudentsHome/StudentDetails/5
+        public ActionResult TeacherDetails(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var teachersAll = repository.GetAllTeachers();
+
+            var tTeachers = from s in teachersAll
+                           where s.Id == id
+                           select s;
+
+            var theteacher = tTeachers.First();
+
+            if (theteacher == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(theteacher);
+        }
+
     }
 }
