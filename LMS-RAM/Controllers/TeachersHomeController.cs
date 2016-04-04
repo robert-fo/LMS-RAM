@@ -417,7 +417,7 @@ namespace LMS_RAM.Controllers
 
             Session["StudentID"] = id;
 
-            return Redirect("/StudentAss/Index/" + Session["CourseID"]);
+            return Redirect("/StudentAssignment/Index/" + Session["CourseID"]);
 
         }
 

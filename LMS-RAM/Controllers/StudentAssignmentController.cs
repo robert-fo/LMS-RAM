@@ -10,24 +10,24 @@ using System.IO;
 
 namespace LMS_RAM.Controllers
 {
-    public class StudentAssController : Controller
+    public class StudentAssignmentController : Controller
     {
 
 
         private StudentRepository repository;
 
-        public StudentAssController()
+        public StudentAssignmentController()
         {
             this.repository = new StudentRepository();
         }
 
-        public StudentAssController(StudentRepository Repository)
+        public StudentAssignmentController(StudentRepository Repository)
         {
             this.repository = Repository;
         }
 
 
-        // GET: StudentAss
+        // GET: StudentAssignment
         public ActionResult Index(int? id)
         {
             var assignmentsAll = repository.GetAllAssignments();
@@ -102,13 +102,13 @@ namespace LMS_RAM.Controllers
             return View(cAssignments);
         }
 
-        // GET: StudentAss/Details/5
+        // GET: StudentAssignment/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: StudentAss/Create
+        // GET: StudentAssignment/Create
         public ActionResult Create()
         {
             ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
@@ -116,7 +116,7 @@ namespace LMS_RAM.Controllers
             return View();
         }
 
-        // POST: StudentAss/Create
+        // POST: StudentAssignment/Create
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
         {
@@ -169,13 +169,13 @@ namespace LMS_RAM.Controllers
             };
         }
 
-        // GET: StudentAss/Edit/5
+        // GET: StudentAssignment/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: StudentAss/Edit/5
+        // POST: StudentAssignment/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -191,13 +191,13 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentAss/Delete/5
+        // GET: StudentAssignment/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: StudentAss/Delete/5
+        // POST: StudentAssignment/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {

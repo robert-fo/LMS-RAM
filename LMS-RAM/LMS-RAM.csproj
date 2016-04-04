@@ -165,7 +165,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ScheduleItemsController.cs" />
-    <Compile Include="Controllers\StudentAssController.cs" />
+    <Compile Include="Controllers\StudentAssignmentController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\StudentSharedsController.cs" />
     <Compile Include="Controllers\StudentsHomeController.cs" />
@@ -197,8 +197,8 @@
     <Compile Include="Repository\StudentRepository.cs" />
     <Compile Include="Repository\WorkingRepository.cs" />
     <Compile Include="Startup.cs" />
-    <Content Include="Views\StudentAss\Index.cshtml" />
-    <Content Include="Views\StudentAss\Create.cshtml" />
+    <Content Include="Views\StudentAssignment\Index.cshtml" />
+    <Content Include="Views\StudentAssignment\Create.cshtml" />
     <Content Include="Views\StudentsHome\Account.cshtml" />
     <Content Include="Views\StudentsHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Account.cshtml" />
