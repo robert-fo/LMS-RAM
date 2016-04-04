@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace LMS_RAM.Repository
 {
@@ -40,6 +41,13 @@ namespace LMS_RAM.Repository
         {
             db.Assignments.Add(assignment);
             db.SaveChanges(); // Updates all changed objects
+        }
+
+        public IEnumerable<SelectListItem> GetScheduleItemList(int id)
+        {
+            return (from t in db.ScheduleItems
+                    where t.CourseId == id
+                    select new SelectListItem() { Text = t.Name, Value = t.Id.ToString() }).ToList();
         }
     }
 }

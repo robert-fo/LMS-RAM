@@ -111,6 +111,7 @@ namespace LMS_RAM.Controllers
         // GET: StudentAssignment/Create
         public ActionResult Create()
         {
+            ViewBag.ScheduleItemList = repository.GetScheduleItemList(Convert.ToInt32(Session["CourseID"]));
             ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
             ViewBag.StudentId = new SelectList(repository.GetAllStudents(), "Id", "SSN");
             return View();
