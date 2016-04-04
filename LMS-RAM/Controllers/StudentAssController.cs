@@ -28,18 +28,19 @@ namespace LMS_RAM.Controllers
 
 
         // GET: StudentAss
-        public ActionResult Index(int courseId = 2)
+        public ActionResult Index(int? id)
         {
             var assignmentsAll = repository.GetAllAssignments();
             var studentsAll = repository.GetAllStudents();
             var scheduleItemsAll = repository.GetAllScheduleItems();
 
+            int studentId;
             //var user = User.Identity.GetUserName();
 
             IEnumerable<Student> studenten;// = new List<Student>();
 
             if (Session["CourseID"] == null)
-                Session["CourseID"] = courseId;
+                Session["CourseID"] = id;
 
             if (Session["StudentID"] == null)
             {
@@ -49,7 +50,9 @@ namespace LMS_RAM.Controllers
                             where student.UserName == user
                             select student;
 
-                Session["StudentID"] = studenten.First().Id;
+                studentId = studenten.First().Id;
+
+                Session["StudentID"] = studentId;
             }
             else
             {
@@ -57,6 +60,8 @@ namespace LMS_RAM.Controllers
                 studenten = from student in studentsAll
                             where student.Id == sID
                             select student;
+
+                studentId = studenten.First().Id;
             }
 
             //var studenten = from student in studentsAll
@@ -69,7 +74,7 @@ namespace LMS_RAM.Controllers
 
             foreach (var aitem in assignmentsAll)
             {
-                if (aitem.StudentId == studenten.First().Id)
+                if (aitem.StudentId == studentId)
                 {
                     sAssignments.Add(aitem);
                 }
@@ -77,7 +82,7 @@ namespace LMS_RAM.Controllers
 
             foreach (var sitem in scheduleItemsAll)
             {
-                if (sitem.CourseId == courseId)
+                if (sitem.CourseId == id)
                 {
                     scheduleItems.Add(sitem);
                 }

@@ -34,12 +34,18 @@ namespace LMS_RAM.Controllers
             var studentsAll = repository.GetAllStudents();
 
             var user = User.Identity.GetUserName();
+            int studentId;
 
             var studenten = from student in studentsAll
                       where student.UserName == user
                       select student;
 
-            ViewBag.StudentId = studenten.First().Id.ToString();
+            studentId = studenten.First().Id;
+
+            //ViewBag.StudentId = studenten.First().Id.ToString();
+            ViewBag.StudentId = studentId.ToString();
+
+            Session["StudentID"] = studentId;
 
             var studentcourses = from course in studentcoursesAll
                                  where course.StudentId == studenten.First().Id
