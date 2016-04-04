@@ -34,59 +34,31 @@ namespace LMS_RAM.Controllers
 		[Authorize(Roles = "admin, teacher, student")]
         public ActionResult Index(int? id)
         {
-			int theUserId = 0;
-
 			// Authenticate the User and Role
 			// ---------------------
 			var user = User.Identity.GetUserName();
 			bool isTeacher = User.IsInRole("teacher");
 			bool isStudent = User.IsInRole("student");
+			bool isAdmin = User.IsInRole("admin");
 
-			// select the teachers all Shared files
-			if (isTeacher)
-			{
-				var teachersAll = repository.GetAllTeachers();
-
-				var theUser = from teacher in teachersAll
-						      where teacher.UserName == user
-					          select teacher;
-				ViewBag.TeacherId = theUser.First().Id.ToString();
-				theUserId = theUser.First().Id;
-			}
-			else if (isStudent)
-			{
-				var studentsAll = repository.GetAllStudents();
-
-				var theUser = from student in studentsAll
-						      where student.UserName == user
-						      select student;
-				ViewBag.StudentId = theUser.First().Id.ToString();
-				theUserId = theUser.First().Id;
-			}
-			
-
-			// Sort out the Shared files per teacher
-			// -------------------------------------
-			
 			//var tShareds = repository.GetTeacherShareds(theUserId);
             var teacherShareds = 
 				db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
 
 			IEnumerable<TeacherShared> tShareds;
 
-			if (isTeacher && id != 0 )
+			if (isTeacher || isStudent && id != 0 )
 			{
 				tShareds = from teacherShared in teacherShareds
-						   where teacherShared.TeacherId == theUserId && teacherShared.CourseId == id
+						   where teacherShared.CourseId == id
 						   orderby teacherShared.CourseId, teacherShared.Id
 						   select teacherShared;
 			}
-			else
+			else 
 			{
-				if (isStudent && id != 0)
+				if (isAdmin)
 				{
 					tShareds = from teacherShared in teacherShareds
-							   where teacherShared.CourseId == id
 							   orderby teacherShared.CourseId, teacherShared.Id
 							   select teacherShared;
 				}
@@ -96,7 +68,6 @@ namespace LMS_RAM.Controllers
 				}
 			}
 			
-			//return View(teacherShareds.ToList());
 			return View(tShareds.ToList());
         }
 
