@@ -10,24 +10,24 @@ using System.IO;
 
 namespace LMS_RAM.Controllers
 {
-    public class StudentAssController : Controller
+    public class StudentAssignmentController : Controller
     {
 
 
         private StudentRepository repository;
 
-        public StudentAssController()
+        public StudentAssignmentController()
         {
             this.repository = new StudentRepository();
         }
 
-        public StudentAssController(StudentRepository Repository)
+        public StudentAssignmentController(StudentRepository Repository)
         {
             this.repository = Repository;
         }
 
 
-        // GET: StudentAss
+        // GET: StudentAssignment
         public ActionResult Index(int? id)
         {
             var assignmentsAll = repository.GetAllAssignments();
@@ -102,21 +102,22 @@ namespace LMS_RAM.Controllers
             return View(cAssignments);
         }
 
-        // GET: StudentAss/Details/5
+        // GET: StudentAssignment/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: StudentAss/Create
+        // GET: StudentAssignment/Create
         public ActionResult Create()
         {
+            ViewBag.ScheduleItemList = repository.GetScheduleItemList(Convert.ToInt32(Session["CourseID"]));
             ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
             ViewBag.StudentId = new SelectList(repository.GetAllStudents(), "Id", "SSN");
             return View();
         }
 
-        // POST: StudentAss/Create
+        // POST: StudentAssignment/Create
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
         {
@@ -133,9 +134,13 @@ namespace LMS_RAM.Controllers
 
                 if (FileName != null && FileName.ContentLength > 0)
                 {
-                    //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
+                    
                     string filepath1 = Path.GetFileName(FileName.FileName);
-                    string filePath2 = Server.MapPath("~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
+                    string subPath = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/";
+
+                    Directory.CreateDirectory(Server.MapPath(subPath));
+                   
+                    string filePath2 = Server.MapPath(subPath + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
                     FileName.SaveAs(filePath2);
                 }
                 //if (ModelState.IsValid)
@@ -144,6 +149,7 @@ namespace LMS_RAM.Controllers
                 //    db.SaveChanges();
                 //    return RedirectToAction("Index");
                 //}
+                //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
 
                 return RedirectToAction("Index");
             }
@@ -164,13 +170,13 @@ namespace LMS_RAM.Controllers
             };
         }
 
-        // GET: StudentAss/Edit/5
+        // GET: StudentAssignment/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: StudentAss/Edit/5
+        // POST: StudentAssignment/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -186,13 +192,13 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentAss/Delete/5
+        // GET: StudentAssignment/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: StudentAss/Delete/5
+        // POST: StudentAssignment/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
