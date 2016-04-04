@@ -133,9 +133,13 @@ namespace LMS_RAM.Controllers
 
                 if (FileName != null && FileName.ContentLength > 0)
                 {
-                    //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
+                    
                     string filepath1 = Path.GetFileName(FileName.FileName);
-                    string filePath2 = Server.MapPath("~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
+                    string subPath = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/";
+
+                    Directory.CreateDirectory(Server.MapPath(subPath));
+                   
+                    string filePath2 = Server.MapPath(subPath + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
                     FileName.SaveAs(filePath2);
                 }
                 //if (ModelState.IsValid)
@@ -144,6 +148,7 @@ namespace LMS_RAM.Controllers
                 //    db.SaveChanges();
                 //    return RedirectToAction("Index");
                 //}
+                //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
 
                 return RedirectToAction("Index");
             }
