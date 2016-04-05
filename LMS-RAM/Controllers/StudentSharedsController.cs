@@ -52,6 +52,12 @@ namespace LMS_RAM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,CourseId,StudentId,Description,FileName")] StudentShared studentShared)
         {
+			// to include in code
+			//bool exists = System.IO.Directory.Exists(Server.MapPath(subPath));
+
+			//if (!exists)
+			//	System.IO.Directory.CreateDirectory(Server.MapPath(subPath));
+
             if (ModelState.IsValid)
             {
                 db.StudentShareds.Add(studentShared);
