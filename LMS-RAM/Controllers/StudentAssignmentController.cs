@@ -39,8 +39,7 @@ namespace LMS_RAM.Controllers
 
             IEnumerable<Student> studenten;// = new List<Student>();
 
-            if (Session["CourseID"] == null)
-                Session["CourseID"] = id;
+             Session["CourseID"] = id;
 
             if (Session["StudentID"] == null)
             {
@@ -103,17 +102,28 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentAssignment/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            List<Assignment> ListAssignments = repository.GetAllAssignments();
+            Assignment assignment = ListAssignments.FirstOrDefault((i => i.Id == id));
+
+
+
+            return View(assignment);
         }
 
         // GET: StudentAssignment/Create
         public ActionResult Create()
         {
+            var temp = Session["CourseID"];
+            
             ViewBag.ScheduleItemList = repository.GetScheduleItemList(Convert.ToInt32(Session["CourseID"]));
-            ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
-            ViewBag.StudentId = new SelectList(repository.GetAllStudents(), "Id", "SSN");
+
+            //ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
+            //ViewBag.StudentId = new SelectList(repository.GetAllStudents(), "Id", "SSN");
+            
+            
+
             return View();
         }
 
@@ -171,9 +181,12 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentAssignment/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            List<Assignment> ListAssignments = repository.GetAllAssignments();
+            Assignment assignment = ListAssignments.FirstOrDefault((i => i.Id == id));
+
+            return View(assignment);
         }
 
         // POST: StudentAssignment/Edit/5
