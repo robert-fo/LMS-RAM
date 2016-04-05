@@ -243,27 +243,9 @@ namespace LMS_RAM.Controllers
         public ActionResult ClassIndex(int? id)
         {
             Session["CourseID"] = id;
-
-            var studentcoursesAll = repository.GetAllStudentCourses();
-            var studentsAll = repository.GetAllStudents();
-
-            var sCourses = from sCourse in studentcoursesAll
-                           where sCourse.CourseId == id
-                           orderby sCourse.Id
-                           select sCourse;
-
             List<Student> classstudents = new List<Student>();
-
-            foreach (var item in sCourses)
-            {
-                foreach (var sitem in studentsAll)
-                {
-                    if (sitem.Id == item.StudentId)
-                    {
-                        classstudents.Add(sitem);
-                    }
-                }
-            }
+            BusinessLogic blogic = new BusinessLogic();
+            classstudents = blogic.StudentsInCourse(id);
 
             return View(classstudents);
         }
@@ -298,7 +280,9 @@ namespace LMS_RAM.Controllers
         public ActionResult AddStudentCourse()
         {
             ViewBag.CourseId = Session["CourseID"];
-            ViewBag.StudentID = repository.GetSelectListStudenter(Convert.ToInt32(Session["CourseID"]));
+
+            BusinessLogic blogic = new BusinessLogic();
+            ViewBag.StudentID = blogic.GetSelectListStudenter(Convert.ToInt32(Session["CourseID"]));
 
             return View();
         }
@@ -417,7 +401,7 @@ namespace LMS_RAM.Controllers
 
             Session["StudentID"] = id;
 
-            return Redirect("/StudentAss/Index/" + Session["CourseID"]);
+            return Redirect("/StudentAssignment/Index/" + Session["CourseID"]);
 
         }
 
