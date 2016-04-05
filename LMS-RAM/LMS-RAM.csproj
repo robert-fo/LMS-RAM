@@ -284,8 +284,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Views\StudentAss\Index.cshtml" />
-    <Content Include="Views\StudentAss\Create.cshtml" />
     <Content Include="Views\StudentsHome\Account.cshtml" />
     <Content Include="Views\StudentsHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Account.cshtml" />
@@ -318,6 +316,8 @@
     <Content Include="Views\StudentsHome\TeacherDetails.cshtml" />
     <Content Include="Views\TeachersManageSchedules\Index.cshtml" />
     <Content Include="Views\TeachersManageSchedules\Create.cshtml" />
+    <Content Include="Views\StudentAssignment\Create.cshtml" />
+    <Content Include="Views\StudentAssignment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
