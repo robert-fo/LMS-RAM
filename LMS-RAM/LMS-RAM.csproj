@@ -324,6 +324,8 @@
     <Content Include="Views\TeachersManageSchedules\Create.cshtml" />
     <Content Include="Views\StudentAssignment\Create.cshtml" />
     <Content Include="Views\StudentAssignment\Index.cshtml" />
+    <Content Include="Views\StudentAssignment\Details.cshtml" />
+    <Content Include="Views\StudentAssignment\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

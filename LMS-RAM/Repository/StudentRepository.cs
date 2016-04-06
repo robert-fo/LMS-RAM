@@ -43,6 +43,12 @@ namespace LMS_RAM.Repository
             db.SaveChanges(); // Updates all changed objects
         }
 
+        public void UpdateDbAssignment(Assignment assignment)
+        {
+            db.Entry(assignment).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
         public IEnumerable<SelectListItem> GetScheduleItemList(int id)
         {
             return (from t in db.ScheduleItems
