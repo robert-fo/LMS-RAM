@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<LMS_RAM.Models.Student>
 
 @{
-    ViewBag.Title = "Course Index";
+    ViewBag.Title = "Course Students";
 }
 
-<h2>Course Index</h2>
+<h2>Course Students</h2>
 
 <p>
     @Html.ActionLink("Add New Student to Course", "AddStudentCourse")
@@ -41,9 +41,9 @@
             @Html.DisplayFor(modelItem => item.UserName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "EditStudent", new { id=item.Id }) |
-            @Html.ActionLink("Details", "DetailsStudent", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "DeleteStudent", new { id=item.Id }) |
+            @Html.ActionLink("Edit", "Edit", "TeachersManageStudents", new { id = item.Id }, null) |
+            @Html.ActionLink("Details", "Details", "TeachersManageStudents", new { id = item.Id }, null) |
+            @Html.ActionLink("Delete", "DeleteStudentCourse", new { id = item.Id }) |
             @Html.ActionLink("Assignments", "AssignmentsStudent", new { id = item.Id })
         </td>
     </tr>

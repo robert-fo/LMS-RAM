@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace LMS_RAM.Repository
 {
     public class BusinessLogic
     {
-        private WorkingRepository wrepository;
+        private IRepository repository;
  
         public BusinessLogic()
         {
-            this.wrepository = new WorkingRepository();
+            this.repository = new WorkingRepository();
+        }
+
+        public BusinessLogic(IRepository Repository)
+        {
+            this.repository = Repository;
         }
 
         public IEnumerable<SelectListItem> GetSelectListStudenter(int? id)
@@ -21,8 +27,8 @@ namespace LMS_RAM.Repository
             var selectList = new List<SelectListItem>();
 
             // Get all values of the Industry enum
-            var Students = wrepository.GetAllStudents();
-            var StudentCourses = wrepository.GetAllStudentCourses();
+            var Students = repository.GetAllStudents();
+            var StudentCourses = repository.GetAllStudentCourses();
 
             selectList.Add(new SelectListItem
             {
@@ -76,15 +82,13 @@ namespace LMS_RAM.Repository
         {
             List<Student> classstudents = new List<Student>();
             
-            var studentcoursesAll = wrepository.GetAllStudentCourses();
-            var studentsAll = wrepository.GetAllStudents();
+            var studentcoursesAll = repository.GetAllStudentCourses();
+            var studentsAll = repository.GetAllStudents();
 
             var sCourses = from sCourse in studentcoursesAll
                            where sCourse.CourseId == id
                            orderby sCourse.Id
                            select sCourse;
-
-
 
             foreach (var item in sCourses)
             {
@@ -99,7 +103,147 @@ namespace LMS_RAM.Repository
 
             return classstudents;
         }
-   
 
+        public IEnumerable<ScheduleItem> CourseSchedule(int? id)
+        {
+            var scheduleItemsAll = repository.GetAllScheduleItems();
+
+            var tScheduleItems = from s in scheduleItemsAll
+                                 where s.CourseId == id
+                                 orderby s.StartTime
+                                 select s;
+
+            return tScheduleItems;
+        }
+
+        public ScheduleItem GetScheduleItem(int? id)
+        {
+            var ScheduleItemsAll = repository.GetAllScheduleItems();
+
+            var tScheduleItems = from s in ScheduleItemsAll
+                                 where s.Id == id
+                                 select s;
+
+            var theScheduleItem = tScheduleItems.First();
+
+            return theScheduleItem;
+        }
+
+        public Course CourseDetails(int? id)
+        {
+            var coursesAll = repository.GetAllCourses();
+
+            var tCourses = from course in coursesAll
+                           where course.Id == id
+                           select course;
+
+            var thecourse = tCourses.First();
+
+            return thecourse;
+        }
+
+        public Student StudentDetails(int? id)
+        {
+            var studentsAll = repository.GetAllStudents();
+
+            var studenten = from student in studentsAll
+                            where student.Id == id
+                            select student;
+
+            var thestudent = studenten.First();
+
+            return thestudent;
+        }
+
+        public Teacher TeacherDetails(int? id)
+        {
+            var teachersAll = repository.GetAllTeachers();
+
+            var tTeachers = from s in teachersAll
+                            where s.Id == id
+                            select s;
+
+            var theteacher = tTeachers.First();
+
+            return theteacher;
+        }
+
+        public Teacher TeacherFromLogin(string user)
+        {
+            var teachersAll = repository.GetAllTeachers();
+
+            var tTeachers = from teacher in teachersAll
+                          where teacher.UserName == user
+                          select teacher;
+
+            var theteacher = tTeachers.First();
+
+            return theteacher;
+        }
+
+        public Student StudentFromLogin(string user)
+        {
+            var studentsAll = repository.GetAllStudents();
+
+            var tStudents = from student in studentsAll
+                            where student.UserName == user
+                            select student;
+
+            var thestudent = tStudents.First();
+
+            return thestudent;
+        }
+
+        public IEnumerable<Course> TeacherCourses(int? id)
+        {
+            var coursesAll = repository.GetAllCourses();
+            
+            var tCourses = from course in coursesAll
+                           where course.TeacherId == id
+                           orderby course.Id
+                           select course;
+
+            return tCourses;
+        }
+
+        public StudentCourse GetStudentCourse(int? sid, int? cid)
+        {
+            var studentCoursesAll = repository.GetAllStudentCourses();
+
+            var tCourses = from s in studentCoursesAll
+                           where s.StudentId == sid
+                           && s.CourseId == cid
+                           select s;
+
+            var thestudentcourse = tCourses.First();
+
+            return thestudentcourse;
+        }
+
+        public IEnumerable<Course> StudentsCourses(int? id)
+        {
+            var coursesAll = repository.GetAllCourses();
+            var studentcoursesAll = repository.GetAllStudentCourses();
+
+            var studentcourses = from course in studentcoursesAll
+                                 where course.StudentId == id
+                                 orderby course.Id
+                                 select course;
+
+            List<Course> sCourses = new List<Course>();
+
+            foreach (var sitem in studentcourses)
+            {
+                foreach (var citem in coursesAll)
+                {
+                    if (sitem.CourseId == citem.Id)
+                    {
+                        sCourses.Add(citem);
+                    }
+                }
+            }
+
+            return sCourses;
+        }
     }
 }

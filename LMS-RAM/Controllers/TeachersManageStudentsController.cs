@@ -13,15 +13,18 @@ namespace LMS_RAM.Controllers
     public class TeachersManageStudentsController : Controller
     {
         private IRepository repository;
+        private BusinessLogic blogic;
 
         public TeachersManageStudentsController()
         {
             this.repository = new WorkingRepository();
+            this.blogic = new BusinessLogic();
         }
 
         public TeachersManageStudentsController(IRepository Repository)
         {
             this.repository = Repository;
+            this.blogic = new BusinessLogic(Repository);
         }
 
         // GET: TeachersManageStudents
@@ -40,15 +43,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentsAll = repository.GetAllStudents();
-
-            //coursesAll.Find
-
-            var tstudents = from s in studentsAll
-                            where s.Id == id
-                            select s;
-
-            var thestudent = tstudents.First();
+            var thestudent = blogic.StudentDetails(id);
 
             if (thestudent == null)
             {
@@ -92,13 +87,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentsAll = repository.GetAllStudents();
-
-            var tStudents = from s in studentsAll
-                            where s.Id == id
-                            select s;
-
-            var thestudent = tStudents.First();
+            var thestudent = blogic.StudentDetails(id);
 
             if (thestudent == null)
             {
@@ -137,13 +126,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentsAll = repository.GetAllStudents();
-
-            var tStudents = from s in studentsAll
-                            where s.Id == id
-                            select s;
-
-            var thestudent = tStudents.First();
+            var thestudent = blogic.StudentDetails(id);
 
             if (thestudent == null)
             {

@@ -287,7 +287,7 @@
     <Content Include="Views\StudentsHome\Account.cshtml" />
     <Content Include="Views\StudentsHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Account.cshtml" />
-    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
+    <Content Include="Views\TeachersHome\CourseIndex.cshtml" />
     <Content Include="Views\TeachersHome\Create.cshtml" />
     <Content Include="Views\TeachersHome\Delete.cshtml" />
     <Content Include="Views\TeachersHome\Details.cshtml" />
@@ -299,18 +299,12 @@
     <Content Include="Views\TeachersManageStudents\Create.cshtml" />
     <Content Include="Views\TeachersManageStudents\Delete.cshtml" />
     <Content Include="Views\TeachersManageStudents\Edit.cshtml" />
-    <Content Include="Views\TeachersHome\Account.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
     <Content Include="Views\TeachersHome\Create.cshtml" />
     <Content Include="Views\TeachersHome\Delete.cshtml" />
     <Content Include="Views\TeachersHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Edit.cshtml" />
     <Content Include="Views\TeachersHome\AddStudentCourse.cshtml" />
     <Content Include="Views\TeachersHome\DeleteStudentCourse.cshtml" />
-    <Content Include="Views\TeachersHome\DetailsStudent.cshtml" />
-    <Content Include="Views\TeachersHome\EditStudentCourse.cshtml" />
     <Content Include="Views\StudentsHome\CourseStudents.cshtml" />
     <Content Include="Views\StudentsHome\StudentDetails.cshtml" />
     <Content Include="Views\StudentsHome\TeacherDetails.cshtml" />
@@ -318,6 +312,10 @@
     <Content Include="Views\TeachersManageSchedules\Create.cshtml" />
     <Content Include="Views\StudentAssignment\Create.cshtml" />
     <Content Include="Views\StudentAssignment\Index.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Edit.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Delete.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Details.cshtml" />
+    <Content Include="Views\StudentsHome\CourseSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

@@ -18,16 +18,9 @@ namespace LMS_RAM.Repository
             db = new ApplicationDbContext();
         }
 
+        // Teachers
 		public List<Teacher> GetAllTeachers()
 		{
-            //return (from row in db.Teachers
-            //        select new Teacher
-            //        {
-            //            SSN = row.SSN,
-            //            FirstName = row.FirstName,
-            //            LastName = row.LastName
-            //        }).ToList();
-
             var teachers = db.Teachers.ToList();
 
             return teachers;
@@ -39,21 +32,25 @@ namespace LMS_RAM.Repository
             db.SaveChanges();  // Updates all changed objects  
         }
 
+        
+        
+        // Students
         public List<Student> GetAllStudents()
         {
-            //return (from row in db.Teachers
-            //        select new Teacher
-            //        {
-            //            SSN = row.SSN,
-            //            FirstName = row.FirstName,
-            //            LastName = row.LastName
-            //        }).ToList();
-
             var students = db.Students.ToList();
 
             return students;
         }
 
+        public void AddStudentUser(ApplicationUser user)
+        {
+            var userStore = new UserStore<ApplicationUser>(db);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+
+            userManager.Create(user, "Pass#1");
+            userManager.AddToRole(user.Id, "student");
+        }
+        
         public void CreateStudent(Student student)
         {
             db.Students.Add(student);
@@ -73,19 +70,11 @@ namespace LMS_RAM.Repository
             db.SaveChanges();  // Updates all changed objects  
         }
 
+        
+        
+        // Courses
 		public List<Course> GetAllCourses()
 		{
-            //return (from row in db.Courses
-            //        where row.TeacherId == teacherId
-            //        select new Course 
-            //        { 
-            //            Name = row.Name, 
-            //            Points = row.Points, 
-            //            StartDate = row.StartDate,
-            //            EndDate = row.EndDate,
-            //            TeacherId = row.TeacherId
-            //        }).ToList();
-
             List<Course> courses = db.Courses.ToList();
 
             return courses;
@@ -106,10 +95,13 @@ namespace LMS_RAM.Repository
 
         public void UpdateDbCourse(Course course)
         {
-            db.Entry(course).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.Entry(course).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på return typerna i get metoderna...
             db.SaveChanges();  // Updates all changed objects  
         }
 
+
+
+        // StudentCourse
         public List<StudentCourse> GetAllStudentCourses()
         {
             var studentcourses = db.StudentCourses.ToList();
@@ -136,15 +128,9 @@ namespace LMS_RAM.Repository
             db.SaveChanges();  // Updates all changed objects  
         }
 
-        public void AddStudentUser(ApplicationUser user)
-        {
-            var userStore = new UserStore<ApplicationUser>(db);
-            var userManager = new UserManager<ApplicationUser>(userStore);
-
-            userManager.Create(user, "Pass#1");
-            userManager.AddToRole(user.Id, "student");
-        }
-
+        
+        
+        // Assignments
         public List<Assignment> GetAllAssignments()
         {
             var assignments = db.Assignments.ToList();
@@ -152,6 +138,9 @@ namespace LMS_RAM.Repository
             return assignments;
         }
 
+        
+        
+        // ScheduleItems
         public List<ScheduleItem> GetAllScheduleItems()
         {
             var scheduleItems = db.ScheduleItems.ToList();
@@ -159,20 +148,20 @@ namespace LMS_RAM.Repository
             return scheduleItems;
         }
 
-        public void CreateScheduleItems(ScheduleItem scheduleitem)
+        public void CreateScheduleItem(ScheduleItem scheduleitem)
         {
             db.ScheduleItems.Add(scheduleitem);
             db.SaveChanges(); // Updates all changed objects
         }
 
-        public void DeleteScheduleItems(int id)
+        public void DeleteScheduleItem(int id)
         {
-            StudentCourse studentcourse = db.StudentCourses.Find(id);
-            db.StudentCourses.Remove(studentcourse);
+            ScheduleItem scheduleitem = db.ScheduleItems.Find(id);
+            db.ScheduleItems.Remove(scheduleitem);
             db.SaveChanges(); // Updates all changed objects
         }
 
-        public void UpdateDbScheduleItems(ScheduleItem scheduleitem)
+        public void UpdateDbScheduleItem(ScheduleItem scheduleitem)
         {
             db.Entry(scheduleitem).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
             db.SaveChanges();  // Updates all changed objects  

@@ -3,6 +3,7 @@ using LMS_RAM.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -12,15 +13,18 @@ namespace LMS_RAM.Controllers
     public class TeachersManageSchedulesController : Controller
     {
         private IRepository repository;
+        private BusinessLogic blogic;
 
         public TeachersManageSchedulesController()
         {
             this.repository = new WorkingRepository();
+            this.blogic = new BusinessLogic();
         }
 
         public TeachersManageSchedulesController(IRepository Repository)
         {
             this.repository = Repository;
+            this.blogic = new BusinessLogic(Repository);
         }
         
         // GET: TeachersManageSchedules
@@ -28,20 +32,27 @@ namespace LMS_RAM.Controllers
         {
             ViewBag.CourseId = id;
 
-            var scheduleItemsAll = repository.GetAllScheduleItems();
-
-            var tScheduleItems = from s in scheduleItemsAll
-                           where s.CourseId == id
-                           orderby s.StartTime
-                           select s;
+            var tScheduleItems = blogic.CourseSchedule(id);
 
             return View(tScheduleItems);
         }
 
         // GET: TeachersManageSchedules/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var theScheduleItem = blogic.GetScheduleItem(id);
+
+            if (theScheduleItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(theScheduleItem);
         }
 
         // GET: TeachersManageSchedules/Create
@@ -59,7 +70,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add insert logic here
-                repository.CreateScheduleItems(scheduleitem);
+                repository.CreateScheduleItem(scheduleitem);
                 return RedirectToAction("Index/" + scheduleitem.CourseId.ToString());
             }
             catch
@@ -69,42 +80,83 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: TeachersManageSchedules/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var theScheduleItem = blogic.GetScheduleItem(id);
+
+            if (theScheduleItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(theScheduleItem);
         }
 
         // POST: TeachersManageSchedules/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditConfirm(ScheduleItem scheduleitem)
         {
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    repository.UpdateDbScheduleItem(scheduleitem);
+                    return RedirectToAction("Index/" + scheduleitem.CourseId.ToString());
+                }
+                return View(scheduleitem);
             }
             catch
             {
-                return View();
+                return View(scheduleitem);
             }
         }
 
         // GET: TeachersManageSchedules/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var theScheduleItem = blogic.GetScheduleItem(id);
+
+            if (theScheduleItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.CourseId = theScheduleItem.CourseId.ToString();
+
+            return View(theScheduleItem);
         }
 
         // POST: TeachersManageSchedules/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirm(int id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var theScheduleItem = blogic.GetScheduleItem(id);
+
+            var CourseID = theScheduleItem.CourseId.ToString();
+
             try
             {
                 // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                repository.DeleteScheduleItem(id);
+                return RedirectToAction("Index/" + CourseID);
             }
             catch
             {

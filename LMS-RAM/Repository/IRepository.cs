@@ -30,9 +30,9 @@ namespace LMS_RAM.Repository
         void DeleteStudentCourse(int id);
         void UpdateDbStudentCourse(StudentCourse studentcourse);
 
-        void CreateScheduleItems(ScheduleItem scheduleitem);
-        void DeleteScheduleItems(int id);
-        void UpdateDbScheduleItems(ScheduleItem scheduleitem);
+        void CreateScheduleItem(ScheduleItem scheduleitem);
+        void DeleteScheduleItem(int id);
+        void UpdateDbScheduleItem(ScheduleItem scheduleitem);
 
         void UpdateDbTeacher(Teacher teacher);
 

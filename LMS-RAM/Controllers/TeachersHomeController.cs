@@ -14,36 +14,29 @@ namespace LMS_RAM.Controllers
     public class TeachersHomeController : Controller
     {
         private IRepository repository;
+        private BusinessLogic blogic;
 
         public TeachersHomeController()
         {
             this.repository = new WorkingRepository();
+            this.blogic = new BusinessLogic();
         }
 
         public TeachersHomeController(IRepository Repository)
         {
             this.repository = Repository;
+            this.blogic = new BusinessLogic(Repository);
         }
         
         // GET: TeacherHHome
         public ActionResult Index()
         {
-            var coursesAll = repository.GetAllCourses();
-            var studentcoursesAll = repository.GetAllStudentCourses();
-            var teachersAll = repository.GetAllTeachers();
-
             var user = User.Identity.GetUserName();
 
-            var lararen = from teacher in teachersAll
-                          where teacher.UserName == user
-                          select teacher;
+            var theteacher = blogic.TeacherFromLogin(user);
+            ViewBag.TeacherId = theteacher.Id.ToString();
 
-            ViewBag.TeacherId = lararen.First().Id.ToString();
-
-            var tCourses = from course in coursesAll
-                          where course.TeacherId == lararen.First().Id
-                          orderby course.Id
-                          select course;
+            var tCourses = blogic.TeacherCourses(theteacher.Id);
 
             return View(tCourses);
         }
@@ -56,15 +49,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var coursesAll = repository.GetAllCourses();
-
-            //coursesAll.Find
-
-            var tCourses = from course in coursesAll
-                           where course.Id == id
-                           select course;
-
-            var thecourse = tCourses.First();
+            var thecourse = blogic.CourseDetails(id);
 
             if (thecourse == null)
             {
@@ -78,13 +63,10 @@ namespace LMS_RAM.Controllers
         public ActionResult Create()
         {
             var user = User.Identity.GetUserName();
-            var teachersAll = repository.GetAllTeachers();
 
-            var lararen = from teacher in teachersAll
-                          where teacher.UserName == user
-                          select teacher;
+            var theteacher = blogic.TeacherFromLogin(user);
 
-            ViewBag.TeacherId = lararen.First().Id.ToString();
+            ViewBag.TeacherId = theteacher.Id.ToString();
             
             return View();
         }
@@ -114,13 +96,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var coursesAll = repository.GetAllCourses();
-
-            var tCourses = from course in coursesAll
-                           where course.Id == id
-                           select course;
-
-            var thecourse = tCourses.First();
+           var thecourse = blogic.CourseDetails(id);
 
             if (thecourse == null)
             {
@@ -159,15 +135,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var coursesAll = repository.GetAllCourses();
-
-            //coursesAll.Find
-
-            var tCourses = from course in coursesAll
-                           where course.Id == id
-                           select course;
-
-            var thecourse = tCourses.First();
+            var thecourse = blogic.CourseDetails(id);
 
             if (thecourse == null)
             {
@@ -202,13 +170,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var teachersAll = repository.GetAllTeachers();
-
-            var lararen = from teacher in teachersAll
-                            where teacher.Id == id
-                            select teacher;
-
-            var theteacher = lararen.First();
+            var theteacher = blogic.TeacherDetails(id);
 
             if (theteacher == null)
             {
@@ -239,13 +201,12 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: ClassIndex
-        public ActionResult ClassIndex(int? id)
+        // GET: CourseIndex
+        public ActionResult CourseIndex(int? id)
         {
             Session["CourseID"] = id;
-            List<Student> classstudents = new List<Student>();
-            BusinessLogic blogic = new BusinessLogic();
-            classstudents = blogic.StudentsInCourse(id);
+
+            var classstudents = blogic.StudentsInCourse(id);
 
             return View(classstudents);
         }
@@ -258,15 +219,7 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentsAll = repository.GetAllStudents();
-
-            //coursesAll.Find
-
-            var tstudents = from s in studentsAll
-                           where s.Id == id
-                           select s;
-
-            var thestudent = tstudents.First();
+            var thestudent = blogic.StudentDetails(id);
 
             if (thestudent == null)
             {
@@ -296,7 +249,7 @@ namespace LMS_RAM.Controllers
             {
                 // TODO: Add insert logic here
                 repository.CreateStudentCourse(studentcourse);
-                return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+                return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
             }
             catch
             {
@@ -313,15 +266,9 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentCoursesAll = repository.GetAllStudentCourses();
             int cId = Convert.ToInt32(Session["CourseID"]);
 
-            var tCourses = from s in studentCoursesAll
-                           where s.StudentId == id
-                           && s.CourseId == cId
-                           select s;
-
-            var thestudentcourse = tCourses.First();
+            var thestudentcourse = blogic.GetStudentCourse(id, cId);
 
             if (thestudentcourse == null)
             {
@@ -342,7 +289,7 @@ namespace LMS_RAM.Controllers
                 if (ModelState.IsValid)
                 {
                     repository.UpdateDbStudentCourse(studentcourse);
-                    return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+                    return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
                 }
                 return View(studentcourse);
             }
@@ -360,15 +307,9 @@ namespace LMS_RAM.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var studentCoursesAll = repository.GetAllStudentCourses();
             int cId = Convert.ToInt32(Session["CourseID"]);
 
-            var tsCourses = from s in studentCoursesAll
-                           where s.StudentId == id
-                           && s.CourseId == cId
-                           select s;
-
-            var thestudentcourse = tsCourses.First();
+            var thestudentcourse = blogic.GetStudentCourse(id, cId);
 
             if (thestudentcourse == null)
             {
@@ -387,7 +328,7 @@ namespace LMS_RAM.Controllers
             {
                 // TODO: Add delete logic here
                 repository.DeleteStudentCourse(id);
-                return RedirectToAction("ClassIndex", new { id = Session["CourseID"] });
+                return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
             }
             catch
             {

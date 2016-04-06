@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<LMS_RAM.Models.Course>
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Teachers Courses";
 }
 
-<h2>View</h2>
+<h2>Teachers Courses</h2>
 
 <p>
     @Html.ActionLink("Create New Course", "Create") | 
-    @Html.ActionLink("Create New Student", "Index", "TeachersManageStudents") | 
+    @Html.ActionLink("Manage Students", "Index", "TeachersManageStudents") | 
     @Html.ActionLink("Your information", "Account", new { id = ViewBag.TeacherId })
 </p>
 <table class="table">
@@ -52,8 +52,8 @@
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id }) | 
-            @Html.ActionLink("Students", "ClassIndex", new { id = item.Id }) |
             @Html.ActionLink("Your Uploads", "TeacherShared", new { id = item.Id }) | 
+            @Html.ActionLink("Course Students", "CourseIndex", new { id = item.Id }) | 
             @Html.ActionLink("Course Schedule", "Index", "TeachersManageSchedules", new { id = item.Id }, null)
         </td>
     </tr>

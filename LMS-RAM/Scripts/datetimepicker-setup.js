@@ -1,40 +1,20 @@
-﻿//$(function () {
+﻿$(function () {
+    // # Går på id't hos en EditorFor kontroll som är samma som propertynamnet i modellen
+    //$('#StartTime').datetimepicker({
+    //    daysOfWeekDisabled: [0, 6]
+    //});
+    //$('#EndTime').datetimepicker({
+    //    daysOfWeekDisabled: [0, 6]
+    //});
+    //$('#StartDate').datetimepicker({
+    //    daysOfWeekDisabled: [0, 6]
+    //});
+    //$('#EndDate').datetimepicker({
+    //    daysOfWeekDisabled: [0, 6]
+    //});
 
-//    $('.datetimepicker').datetimepicker({
-//        pickDate: true,                 //en/disables the date picker
-//        pickTime: true,                 //en/disables the time picker
-//        useMinutes: true,              //en/disables the minutes picker
-//        useSeconds: false,              //en/disables the seconds picker
-//    });
-
-//    $('#AnnualMeetingDate').datetimepicker({
-
-//        defaultDate: '@Model.AnnualMeetingDate',
-
-//        format: 'L',
-
-//        showClose: true,
-
-//        showClear: true,
-
-//        toolbarPlacement: 'top'
-
-//    });
-
-//    $('#AnnualMeetingStartTime').datetimepicker({
-
-//        defaultDate: '@Model.AnnualMeetingStartTime',
-
-//        format: 'LT',
-
-//        showClose: true,
-
-//        showClear: true,
-
-//        toolbarPlacement: 'top',
-
-//        stepping: 15
-
-//    });
-
-//});
+    // Generisk, lägg til CSS-Klassnamn datetimepicker i en EditorFor helper
+    $('.datetimepicker').datetimepicker({
+        daysOfWeekDisabled: [0, 6]
+    });
+});
