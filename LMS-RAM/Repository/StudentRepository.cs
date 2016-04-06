@@ -23,6 +23,13 @@ namespace LMS_RAM.Repository
             return students;
         }
 
+        public List<StudentShared> GetAllStudentShared()
+        {
+            var studentShared = db.StudentShareds.ToList();
+
+            return studentShared;
+        }
+
         public List<Assignment> GetAllAssignments()
         {
             var assignments = db.Assignments.ToList();
@@ -35,6 +42,13 @@ namespace LMS_RAM.Repository
             var scheduleItems = db.ScheduleItems.ToList();
 
             return scheduleItems;
+        }
+
+        public List<Course> GetAllCourses()
+        {
+            var courses = db.Courses.ToList();
+
+            return courses;
         }
 
         public void CreateAssignment(Assignment assignment)

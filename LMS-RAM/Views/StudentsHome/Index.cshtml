@@ -49,6 +49,7 @@
             <td>
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Your Assignments", "Index", "StudentAssignment", new { id = item.Id }, null) |
+            @Html.ActionLink("Your Uploads", "Index", "StudentShared", new { id = item.Id }, null) |
             @Html.ActionLink("Teachers Details", "TeacherDetails", new { id = item.TeacherId }) |
             @Html.ActionLink("Teachers Uploads", "TeacherShared", new { id = item.Id }) |      
             @Html.ActionLink("Students", "CourseStudents", new { id = item.Id })

@@ -167,6 +167,7 @@
     <Compile Include="Controllers\ScheduleItemsController.cs" />
     <Compile Include="Controllers\StudentAssignmentController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\StudentSharedController.cs" />
     <Compile Include="Controllers\StudentSharedsController.cs" />
     <Compile Include="Controllers\StudentsHomeController.cs" />
     <Compile Include="Controllers\TeachersHomeController.cs" />
@@ -320,6 +321,7 @@
     <Content Include="Views\StudentAssignment\Index.cshtml" />
     <Content Include="Views\StudentAssignment\Details.cshtml" />
     <Content Include="Views\StudentAssignment\Edit.cshtml" />
+    <Content Include="Views\StudentShared\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
