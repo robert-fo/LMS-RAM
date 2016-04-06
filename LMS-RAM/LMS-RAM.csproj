@@ -177,6 +177,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604051306467_Initial.cs" />
+    <Compile Include="Migrations\201604051306467_Initial.Designer.cs">
+      <DependentUpon>201604051306467_Initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -275,6 +279,8 @@
     <Compile Include="Repository\BusinessLogic.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\StudentRepository.cs" />
+    <Compile Include="Repository\ITeacherSharedRepository.cs" />
+    <Compile Include="Repository\TeacherSharedRepository.cs" />
     <Compile Include="Repository\WorkingRepository.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
@@ -430,6 +436,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201604051306467_Initial.resx">
+      <DependentUpon>201604051306467_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
