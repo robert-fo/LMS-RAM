@@ -28,6 +28,7 @@ namespace LMS_RAM.Controllers
 
 
         // GET: StudentAssignment
+        [Authorize(Roles = "teacher, student")]
         public ActionResult Index(int? id)
         {
             var assignmentsAll = repository.GetAllAssignments();
@@ -102,6 +103,7 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentAssignment/Details/5
+        [Authorize(Roles = "teacher, student")]
         public ActionResult Details(int? id)
         {
             List<Assignment> ListAssignments = repository.GetAllAssignments();
@@ -113,6 +115,7 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentAssignment/Create
+        [Authorize(Roles = "student")]
         public ActionResult Create()
         {
             var temp = Session["CourseID"];
@@ -128,6 +131,7 @@ namespace LMS_RAM.Controllers
         }
 
         // POST: StudentAssignment/Create
+        [Authorize(Roles = "student")]
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment, HttpPostedFileBase FileName)
         {
@@ -169,6 +173,7 @@ namespace LMS_RAM.Controllers
             }
         }
 
+        [Authorize(Roles = "teacher, student")]
         public FileResult Download(Assignment assignment)
         {
             string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" + assignment.Id + "_" + assignment.FileName;
@@ -181,6 +186,7 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentAssignment/Edit/5
+        [Authorize(Roles = "teacher")]
         public ActionResult Edit(int? id)
         {
             List<Assignment> ListAssignments = repository.GetAllAssignments();
@@ -190,36 +196,15 @@ namespace LMS_RAM.Controllers
         }
 
         // POST: StudentAssignment/Edit/5
+        [Authorize(Roles = "teacher")]
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit([Bind(Include = "Id,StudentId,ScheduleItemId,Name,Grade,Comment,FileName")] Assignment assignment)
         {
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: StudentAssignment/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: StudentAssignment/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                repository.UpdateDbAssignment(assignment);
+                return RedirectToAction("Index", new { id = Session["CourseID"] });
             }
             catch
             {
