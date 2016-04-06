@@ -19,9 +19,11 @@ namespace LMS_RAM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 		private IRepository repository;
+		private ITeacherSharedRepository tsRepository;
 
 		public TeacherSharedsController ()
 		{
+			tsRepository = new TeacherSharedRepository();
 			repository = new WorkingRepository();
 		}
 
@@ -43,53 +45,31 @@ namespace LMS_RAM.Controllers
 			bool isStudent = User.IsInRole("student");
 			bool isAdmin = User.IsInRole("admin");
 
-			// select the teachers all Shared files
-			// the courseId (id is null)
-			if (id == null)
+			if (isTeacher)
 			{
-				// check Session and ViewBag data
-				if (id == null)
-				{
-					// check if Session variable is set
-					try
-					{
-						id = int.Parse(Session["CourseId"].ToString());
-						if (id == null)
-						{
-							id = ViewBag.CourseId;
-						}
-					}
-					catch (Exception e)
-					{
-						ViewBag.Error(e.Message);
-					}
-					
-				}
-				if (isTeacher)
-				{
-					var teachersAll = repository.GetAllTeachers();
+				var teachersAll = repository.GetAllTeachers();
 
-					var theUser = from teacher in teachersAll
-								  where teacher.UserName == user
-								  select teacher;
-					ViewBag.TeacherId = theUser.First().Id.ToString();
-					theUserId = theUser.First().Id;
-				}
-				else if (isStudent)
-				{
-					var studentsAll = repository.GetAllStudents();
+				var theUser = from teacher in teachersAll
+								where teacher.UserName == user
+								select teacher;
+				ViewBag.TeacherId = theUser.First().Id.ToString();
+				theUserId = theUser.First().Id;
+			}
+			else if (isStudent)
+			{
+				var studentsAll = repository.GetAllStudents();
 
-					var theUser = from student in studentsAll
-								  where student.UserName == user
-								  select student;
-					ViewBag.StudentId = theUser.First().Id.ToString();
-					theUserId = theUser.First().Id;
-				}
+				var theUser = from student in studentsAll
+								where student.UserName == user
+								select student;
+				ViewBag.StudentId = theUser.First().Id.ToString();
+				theUserId = theUser.First().Id;
 			}
 
-			//var tShareds = repository.GetTeacherShareds(theUserId);
-            var teacherShareds = 
-				db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
+
+			
+            //var teacherShareds = db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
+			var teacherShareds = tsRepository.GetAllTeacherShareds ();
 
 			IEnumerable<TeacherShared> tShareds;
 
@@ -137,8 +117,11 @@ namespace LMS_RAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TeacherShared teacherShared = db.TeacherShareds.Find(id);
-            if (teacherShared == null)
+            //TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			int tsid = (int)id;
+			var teacherShared = tsRepository.getTeacherShared (tsid);
+            
+			if (teacherShared == null)
             {
                 return HttpNotFound();
             }
@@ -166,7 +149,8 @@ namespace LMS_RAM.Controllers
 							  select teacher;
 	
 				theUserId = theUser.First().Id;
-				ViewBag.TeacherId = new SelectList(theUser, "Id", "SSN");
+				//ViewBag.TeacherId = new SelectList(theUser, "Id", "SSN");
+				ViewBag.TeacherId = theUserId;
 			}
 
 			var coursesAll = repository.GetAllCourses();
@@ -229,7 +213,9 @@ namespace LMS_RAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			int tsid = (int)id;
+			//TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			TeacherShared teacherShared = tsRepository.getTeacherShared(tsid);
             if (teacherShared == null)
             {
                 return HttpNotFound();
@@ -240,7 +226,7 @@ namespace LMS_RAM.Controllers
 								 select course;
 			
             ViewBag.CourseId = new SelectList(teachersCourse, "Id", "Name", teacherShared.CourseId);
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN", teacherShared.TeacherId);
+            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "Teacher name", teacherShared.TeacherId);
             return View(teacherShared);
         }
 
@@ -252,8 +238,31 @@ namespace LMS_RAM.Controllers
 		[Authorize(Roles = "teacher")]
 		public ActionResult Edit([Bind(Include = "Id,CourseId,TeacherId,Description,FileName")] TeacherShared teacherShared, HttpPostedFileBase FileName)
         {
+			int length = FileName.FileName.Length;
+			int index = FileName.FileName.LastIndexOf('\\') + 1;
+
+			
+			string path = FileName.FileName.Substring(0, index);
+			string filename = FileName.FileName.Substring(index);
+				
+			//update database
+			teacherShared.FileName = filename;
+			db.Entry(teacherShared).State = System.Data.Entity.EntityState.Modified;
+			db.SaveChanges();
+
+			string oldFiles = teacherShared.TeacherId + "_" +
+					teacherShared.CourseId + "_" +
+					teacherShared.Id + "_*.pdf";
+
    			try
 			{
+				// remove old file
+				foreach (string DeleteFileName in Directory.EnumerateFiles
+					(Server.MapPath("~/Uploads/TeachersShared/"), oldFiles))
+				{
+					System.IO.File.Delete(Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), DeleteFileName));
+				}
+
 				//repository.CreateFile()
 				if (FileName != null && FileName.ContentLength > 0)
 				{
@@ -262,36 +271,22 @@ namespace LMS_RAM.Controllers
 						teacherShared.CourseId.ToString() + "_" + 
 						teacherShared.Id + "_" + 
 						Path.GetFileName(FileName.FileName));
-					
-					if (!System.IO.File.Exists(filePath))
-					{
-						if (ModelState.IsValid)
-						{						
-							// remove old file
-							if (System.IO.File.Exists(filePath))
-							{
-								System.IO.File.Delete(filePath);
-							}
-							// store new file
-							FileName.SaveAs(filePath);
-							teacherShared.FileName = Path.GetFileName(FileName.FileName);
-							
-							// update database
-							db.Entry(teacherShared).State = EntityState.Modified;
-							db.SaveChanges();
-							return RedirectToAction("Index", teacherShared.CourseId);
-						}
-
-					}
+														
+						// store new file
+						FileName.SaveAs(filePath);
+													
+						return RedirectToAction("Index", teacherShared.CourseId);
 				}
 			}
-			catch
+			catch (Exception e)
 			{
+				ViewBag.Error(e.Message);
 				return RedirectToAction("Index", teacherShared.CourseId);
 			}
-			return RedirectToAction("Index", teacherShared.CourseId);
 
             ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
+
+			return RedirectToAction("Index", teacherShared.CourseId);
             ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN", teacherShared.TeacherId);
             return RedirectToAction("Index", teacherShared.CourseId );
         }
@@ -328,7 +323,11 @@ namespace LMS_RAM.Controllers
             db.SaveChanges();
 
 			// remove the file also
-			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" + teacherShared.CourseId.ToString() + "_" + teacherShared.FileName);
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"),
+				teacherShared.TeacherId.ToString() + "_" + 
+				teacherShared.CourseId.ToString() + "_" +
+				teacherShared.Id.ToString() + "_" + 
+				teacherShared.FileName);
 
 			try
 			{
@@ -339,7 +338,7 @@ namespace LMS_RAM.Controllers
 			}
 			catch (Exception e)
 			{
-				int ett = 1;
+				ViewBag.Error(e.Message);
 			}
 
             return RedirectToAction("Index", theCourseId);
@@ -349,7 +348,11 @@ namespace LMS_RAM.Controllers
 		public ActionResult Download(int id)
 		{
 			TeacherShared teacherShared = db.TeacherShareds.Find(id);
-			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" + teacherShared.CourseId.ToString() + "_" + teacherShared.FileName);
+			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"),
+											teacherShared.TeacherId.ToString() + "_" + 
+											teacherShared.CourseId.ToString() + "_" +
+											teacherShared.Id + "_" + 
+											teacherShared.FileName);
 			
 			try
 			{
