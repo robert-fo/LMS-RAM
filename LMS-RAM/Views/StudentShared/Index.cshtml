@@ -1,25 +1,21 @@
-﻿@model IEnumerable<LMS_RAM.Models.TeacherShared>
+﻿@model IEnumerable<LMS_RAM.Models.StudentShared>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>TeacherShareds</h2>
+<h2>StudentShareds</h2>
 
 <p>
-@if (User.IsInRole("teacher"))
-{
     @Html.ActionLink("Create New", "Create")
-}
 </p>
-
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Teacher.SSN)
+            @Html.DisplayNameFor(model => model.Course.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Course.Name)
+            @Html.DisplayNameFor(model => model.Student.SSN)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
@@ -33,31 +29,21 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Teacher.SSN)
+            @Html.DisplayFor(modelItem => item.Course.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Course.Name)
+            @Html.DisplayFor(modelItem => item.Student.SSN)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.ActionLink("Download", "Download", new { id = item.Id })
             @Html.DisplayFor(modelItem => item.FileName)
         </td>
         <td>
-@if (User.IsInRole("teacher"))
-{ 
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
-}
- |
-            @Html.ActionLink("Details", "Details", new { id=item.Id })
- |
-@if (User.IsInRole("teacher"))
-{ 
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-}
-
         </td>
     </tr>
 }

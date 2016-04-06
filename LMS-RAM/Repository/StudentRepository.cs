@@ -23,6 +23,13 @@ namespace LMS_RAM.Repository
             return students;
         }
 
+        public List<StudentShared> GetAllStudentShared()
+        {
+            var studentShared = db.StudentShareds.ToList();
+
+            return studentShared;
+        }
+
         public List<Assignment> GetAllAssignments()
         {
             var assignments = db.Assignments.ToList();
@@ -37,10 +44,23 @@ namespace LMS_RAM.Repository
             return scheduleItems;
         }
 
+        public List<Course> GetAllCourses()
+        {
+            var courses = db.Courses.ToList();
+
+            return courses;
+        }
+
         public void CreateAssignment(Assignment assignment)
         {
             db.Assignments.Add(assignment);
             db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void UpdateDbAssignment(Assignment assignment)
+        {
+            db.Entry(assignment).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
         }
 
         public IEnumerable<SelectListItem> GetScheduleItemList(int id)
