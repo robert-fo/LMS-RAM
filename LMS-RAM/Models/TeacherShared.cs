@@ -19,7 +19,7 @@ namespace LMS_RAM.Models
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-        [StringLength(50, ErrorMessage = "Max 50 tecken")]
+        [StringLength(500, ErrorMessage = "Max 50 tecken")]
         [Display(Name = "File name")]
         public String FileName { get; set; }
 
