@@ -13,19 +13,15 @@ namespace LMS_RAM.Controllers
      [Authorize(Roles = "student")]
     public class StudentsHomeController : Controller
     {
- 
-        private IRepository repository;
         private BusinessLogic blogic;
 
         public StudentsHomeController()
         {
-            this.repository = new WorkingRepository();
             this.blogic = new BusinessLogic();
         }
 
         public StudentsHomeController(IRepository Repository)
         {
-            this.repository = Repository;
             this.blogic = new BusinessLogic(Repository);
         }
         
@@ -112,7 +108,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbStudent(student);
+                    blogic.UpdateStudent(student);
                     return RedirectToAction("Index");
                 }
                 return View(student);

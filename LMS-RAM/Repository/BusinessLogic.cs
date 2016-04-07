@@ -245,5 +245,79 @@ namespace LMS_RAM.Repository
 
             return sCourses;
         }
+
+        public void UpdateStudent(Student student){
+            repository.UpdateDbStudent(student);
+        }
+
+        public void DeleteStudent(int id)
+        {
+            repository.DeleteStudent(id);
+        }
+
+        public List<Student> GetAllStudents()
+        {
+            return repository.GetAllStudents();
+        }
+
+        public void CreateStudent(Student student)
+        {
+            repository.CreateStudent(student);
+        }
+
+        public void AddStudentUser(ApplicationUser user)
+        {
+            repository.AddStudentUser(user);
+        }
+
+        public void DeleteScheduleItem(int id)
+        {
+            repository.DeleteScheduleItem(id);
+        }
+
+        public void CreateScheduleItem(ScheduleItem scheduleitem)
+        {
+            repository.CreateScheduleItem(scheduleitem);
+        }
+
+        public void UpdateDbScheduleItem(ScheduleItem scheduleitem) 
+        {
+            repository.UpdateDbScheduleItem(scheduleitem);
+        }
+
+        public void UpdateDbCourse(Course course) 
+        {
+            repository.UpdateDbCourse(course);
+        }
+
+        public void DeleteCourse(int id)
+        {
+            repository.DeleteCourse(id);
+        }
+
+        public void UpdateDbTeacher(Teacher teacher)
+        {
+            repository.UpdateDbTeacher(teacher);
+        }
+
+        public void CreateStudentCourse(StudentCourse studentcourse)
+        {
+            repository.CreateStudentCourse(studentcourse);
+        }
+
+        public void UpdateDbStudentCourse(StudentCourse studentcourse)
+        {
+            repository.UpdateDbStudentCourse(studentcourse);
+        }
+
+        public void DeleteStudentCourse(int id)
+        {
+            repository.DeleteStudentCourse(id);
+        }
+
+        public void CreateCourse(Course course)
+        {
+            repository.CreateCourse(course);
+        }
     }
 }

@@ -12,25 +12,22 @@ namespace LMS_RAM.Controllers
     [Authorize(Roles = "teacher")]
     public class TeachersManageStudentsController : Controller
     {
-        private IRepository repository;
         private BusinessLogic blogic;
 
         public TeachersManageStudentsController()
         {
-            this.repository = new WorkingRepository();
             this.blogic = new BusinessLogic();
         }
 
         public TeachersManageStudentsController(IRepository Repository)
         {
-            this.repository = Repository;
             this.blogic = new BusinessLogic(Repository);
         }
 
         // GET: TeachersManageStudents
         public ActionResult Index()
         {
-            var studentsAll = repository.GetAllStudents();
+            var studentsAll = blogic.GetAllStudents();
 
             return View(studentsAll);
         }
@@ -66,10 +63,11 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add insert logic here
-                repository.CreateStudent(student);
+                blogic.CreateStudent(student);
 
                 var user = new ApplicationUser { Email = student.UserName, UserName = student.UserName };
-                repository.AddStudentUser(user);
+
+                blogic.AddStudentUser(user);
 
                 return RedirectToAction("Index");
             }
@@ -107,7 +105,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbStudent(student);
+                    blogic.UpdateStudent(student);
                     return RedirectToAction("Index");
                 }
                 return View(student);
@@ -144,7 +142,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add delete logic here
-                repository.DeleteStudent(id);
+                blogic.DeleteStudent(id);
                 return RedirectToAction("Index");
             }
             catch
