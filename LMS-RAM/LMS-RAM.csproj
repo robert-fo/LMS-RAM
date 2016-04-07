@@ -335,6 +335,7 @@
     <Content Include="Views\TeachersManageSchedules\Edit.cshtml" />
     <Content Include="Views\StudentShared\Delete.cshtml" />
     <Content Include="Views\StudentShared\Details.cshtml" />
+    <Content Include="Views\StudentShared\SharedIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

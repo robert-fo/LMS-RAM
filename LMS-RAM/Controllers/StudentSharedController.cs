@@ -90,6 +90,22 @@ namespace LMS_RAM.Controllers
             return View(cstudentShared);
         }
 
+        [Authorize(Roles = "student")]
+        public ActionResult SharedIndex(int? id)
+        {
+            var studentSharedAll = repository.GetAllStudentShared();
+            List<StudentShared> studentShared = new List<StudentShared>();
+
+            foreach (var sitem in studentSharedAll)
+            {
+                if (sitem.CourseId == id)
+                {
+                    studentShared.Add(sitem);
+                }
+            }
+            return View(studentShared);
+        }
+
         // GET: StudentShared/Details/5
         [Authorize(Roles = "admin, teacher, student")]
         public ActionResult Details(int? id)
