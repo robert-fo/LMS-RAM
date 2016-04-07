@@ -45,6 +45,7 @@ namespace LMS_RAM.Controllers
             if (Session["StudentID"] == null)
             {
                 var user = User.Identity.GetUserName();
+               
 
                 studenten = from student in studentsAll
                             where student.UserName == user
@@ -52,10 +53,11 @@ namespace LMS_RAM.Controllers
 
                 studentId = studenten.First().Id;
 
-                Session["StudentID"] = studentId;
+                //Session["StudentID"] = studentId;
             }
             else
             {
+                ViewBag.Role = "teacher";
                 int sID = Convert.ToInt32(Session["StudentID"]);
                 studenten = from student in studentsAll
                             where student.Id == sID
@@ -137,35 +139,26 @@ namespace LMS_RAM.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
-                assignment.FileName = FileName.FileName;
-
-                if (ModelState.IsValid)
-                {
-                    repository.CreateAssignment(assignment);
-                    //return RedirectToAction("Index");
-                }
-
                 if (FileName != null && FileName.ContentLength > 0)
                 {
+                    if (ModelState.IsValid)
+                    {
+                        assignment.FileName = FileName.FileName;
                     
-                    string filepath1 = Path.GetFileName(FileName.FileName);
-                    string subPath = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/";
+                        repository.CreateAssignment(assignment);
+                    
+                        string subPath1 = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/";
+                        string subPath2 = Path.GetFileName(FileName.FileName);
 
-                    Directory.CreateDirectory(Server.MapPath(subPath));
-                   
-                    string filePath2 = Server.MapPath(subPath + assignment.StudentId + "_" + assignment.Id + "_" + filepath1);
-                    FileName.SaveAs(filePath2);
+                        Directory.CreateDirectory(Server.MapPath(subPath1));
+
+                        string filePath = Server.MapPath(subPath1 + assignment.StudentId + "_" + assignment.Id + "_" + subPath2);
+                        FileName.SaveAs(filePath);
+                      
+                        return RedirectToAction("Index");
+                    }
                 }
-                //if (ModelState.IsValid)
-                //{
-                //    db.Assignments.Add(assignment);
-                //    db.SaveChanges();
-                //    return RedirectToAction("Index");
-                //}
-                //string filePath = Path.Combine(Server.MapPath("~/Uploads/Assignments/"), Path.GetFileName(FileName.FileName));
-
-                return RedirectToAction("Index");
+                return View();
             }
             catch
             {

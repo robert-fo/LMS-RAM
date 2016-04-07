@@ -38,6 +38,7 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
+            @Html.ActionLink("Download", "Download", item)
             @Html.DisplayFor(modelItem => item.FileName)
         </td>
         <td>

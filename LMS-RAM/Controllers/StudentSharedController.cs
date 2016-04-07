@@ -93,18 +93,34 @@ namespace LMS_RAM.Controllers
         }
 
         // GET: StudentShared/Create
+        [Authorize(Roles = "student")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: StudentShared/Create
+        [Authorize(Roles = "student")]
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create([Bind(Include = "Id,CourseId,StudentId,Description,FileName")] StudentShared studentShared, HttpPostedFileBase FileName)
         {
             try
             {
                 // TODO: Add insert logic here
+                studentShared.FileName = FileName.FileName;
+
+                if (ModelState.IsValid)
+                {
+                    repository.CreateStudentShared(studentShared);                   
+                }
+
+                if (FileName != null && FileName.ContentLength > 0)
+                {
+                    string subPath1 = "~/Uploads/StudentsShared/" + studentShared.CourseId + "_" + studentShared.StudentId + "_" + studentShared.Id + "_";
+                    string subPath2 = Path.GetFileName(FileName.FileName);
+                    string filePath = Server.MapPath(subPath1 + subPath2);
+                    FileName.SaveAs(filePath);
+                }
 
                 return RedirectToAction("Index");
             }
@@ -114,13 +130,30 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        // GET: StudentShared/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "student")]
+        public FileResult Download(StudentShared studentShared)
         {
-            return View();
+            string fileName = "~/Uploads/StudentsShared/" + studentShared.CourseId + "_" + studentShared.StudentId + "_" + studentShared.Id + "_" + studentShared.FileName;
+            string contentType = "application/pdf";
+
+            return new FilePathResult(fileName, contentType)
+            {
+                FileDownloadName = studentShared.FileName
+            };
+        }
+
+        // GET: StudentShared/Edit/5
+        [Authorize(Roles = "student")]
+        public ActionResult Edit(int? id)
+        {
+            List<StudentShared> ListStudentShared = repository.GetAllStudentShared();
+            StudentShared studentShared = ListStudentShared.FirstOrDefault((i => i.Id == id));
+
+            return View(studentShared);
         }
 
         // POST: StudentShared/Edit/5
+        [Authorize(Roles = "student")]
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {

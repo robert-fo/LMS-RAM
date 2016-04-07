@@ -62,5 +62,16 @@
 }
 
 </table>
+<div>
+    @if (ViewBag.Role == "teacher")
+    {
+        @Html.ActionLink("Back to List", "CourseIndex", "TeachersHome", new { id = Session["CourseID"] }, null);
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "StudentsHome");
+    }
+   
+</div>
 
 
