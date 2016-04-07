@@ -330,6 +330,11 @@
     <Content Include="Views\StudentShared\Index.cshtml" />
     <Content Include="Views\StudentShared\Create.cshtml" />
     <Content Include="Views\StudentShared\Edit.cshtml" />
+    <Content Include="Views\StudentsHome\CourseSchedule.cshtml" />
+    <Content Include="Views\TeachersHome\CourseIndex.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Delete.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Details.cshtml" />
+    <Content Include="Views\TeachersManageSchedules\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

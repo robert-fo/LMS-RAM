@@ -155,13 +155,12 @@ namespace LMS_RAM.Controllers
         // POST: StudentShared/Edit/5
         [Authorize(Roles = "student")]
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit([Bind(Include = "Id,CourseId,StudentId,Description,FileName")] StudentShared studentShared)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                repository.UpdateDbStudentShared(studentShared);
+                return RedirectToAction("Index", new { id = Session["CourseID"] });
             }
             catch
             {
