@@ -12,18 +12,15 @@ namespace LMS_RAM.Controllers
     [Authorize(Roles = "teacher")]
     public class TeachersManageSchedulesController : Controller
     {
-        private IRepository repository;
         private BusinessLogic blogic;
 
         public TeachersManageSchedulesController()
         {
-            this.repository = new WorkingRepository();
             this.blogic = new BusinessLogic();
         }
 
         public TeachersManageSchedulesController(IRepository Repository)
         {
-            this.repository = Repository;
             this.blogic = new BusinessLogic(Repository);
         }
         
@@ -70,7 +67,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add insert logic here
-                repository.CreateScheduleItem(scheduleitem);
+                blogic.CreateScheduleItem(scheduleitem);
                 return RedirectToAction("Index/" + scheduleitem.CourseId.ToString());
             }
             catch
@@ -107,7 +104,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbScheduleItem(scheduleitem);
+                    blogic.UpdateDbScheduleItem(scheduleitem);
                     return RedirectToAction("Index/" + scheduleitem.CourseId.ToString());
                 }
                 return View(scheduleitem);
@@ -155,7 +152,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add delete logic here
-                repository.DeleteScheduleItem(id);
+                blogic.DeleteScheduleItem(id);
                 return RedirectToAction("Index/" + CourseID);
             }
             catch

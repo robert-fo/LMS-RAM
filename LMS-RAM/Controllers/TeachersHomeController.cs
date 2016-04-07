@@ -13,18 +13,15 @@ namespace LMS_RAM.Controllers
     [Authorize(Roles = "teacher")]
     public class TeachersHomeController : Controller
     {
-        private IRepository repository;
         private BusinessLogic blogic;
 
         public TeachersHomeController()
         {
-            this.repository = new WorkingRepository();
             this.blogic = new BusinessLogic();
         }
 
         public TeachersHomeController(IRepository Repository)
         {
-            this.repository = Repository;
             this.blogic = new BusinessLogic(Repository);
         }
         
@@ -78,7 +75,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add insert logic here
-                repository.CreateCourse(course);
+                blogic.CreateCourse(course);
                 return RedirectToAction("Index");
             }
             catch
@@ -116,7 +113,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbCourse(course);
+                    blogic.UpdateDbCourse(course);
                     return RedirectToAction("Index");
                 }
                 return View(course);
@@ -153,7 +150,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add delete logic here
-                repository.DeleteCourse(id);
+                blogic.DeleteCourse(id);
                 return RedirectToAction("Index");
             }
             catch
@@ -190,7 +187,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbTeacher(teacher);
+                    blogic.UpdateDbTeacher(teacher);
                     return RedirectToAction("Index");
                 }
                 return View(teacher);
@@ -234,7 +231,6 @@ namespace LMS_RAM.Controllers
         {
             ViewBag.CourseId = Session["CourseID"];
 
-            BusinessLogic blogic = new BusinessLogic();
             ViewBag.StudentID = blogic.GetSelectListStudenter(Convert.ToInt32(Session["CourseID"]));
 
             return View();
@@ -248,7 +244,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add insert logic here
-                repository.CreateStudentCourse(studentcourse);
+                blogic.CreateStudentCourse(studentcourse);
                 return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
             }
             catch
@@ -288,7 +284,7 @@ namespace LMS_RAM.Controllers
                 // TODO: Add update logic here
                 if (ModelState.IsValid)
                 {
-                    repository.UpdateDbStudentCourse(studentcourse);
+                    blogic.UpdateDbStudentCourse(studentcourse);
                     return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
                 }
                 return View(studentcourse);
@@ -327,7 +323,7 @@ namespace LMS_RAM.Controllers
             try
             {
                 // TODO: Add delete logic here
-                repository.DeleteStudentCourse(id);
+                blogic.DeleteStudentCourse(id);
                 return RedirectToAction("CourseIndex", new { id = Session["CourseID"] });
             }
             catch
