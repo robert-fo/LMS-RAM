@@ -7,8 +7,10 @@
 <h2>Students Courses</h2>
 
 <p>
-    @Html.ActionLink("Your Information", "Account", new { id = ViewBag.StudentId }) @*| @Html.ActionLink("Create New", "Create")*@
-    </p>
+    <div style="float:right">
+        @Html.ActionLink("Your Information", "Account", new { id = ViewBag.StudentId })
+    </div>
+</p>
     <table class="table">
         <tr>
             <th>

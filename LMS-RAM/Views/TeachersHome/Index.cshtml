@@ -7,9 +7,13 @@
 <h2>Teachers Courses</h2>
 
 <p>
-    @Html.ActionLink("Create New Course", "Create") | 
-    @Html.ActionLink("Manage Students", "Index", "TeachersManageStudents") | 
-    @Html.ActionLink("Your information", "Account", new { id = ViewBag.TeacherId })
+    <div style="float:left">
+        @Html.ActionLink("Create New Course", "Create") |
+        @Html.ActionLink("Manage All Students", "Index", "TeachersManageStudents")
+    </div>
+    <div style="float:right">
+        @Html.ActionLink("Your information", "Account", new { id = ViewBag.TeacherId })
+    </div>
 </p>
 <table class="table">
     <tr>
