@@ -57,6 +57,18 @@ namespace LMS_RAM.Repository
             db.SaveChanges(); // Updates all changed objects
         }
 
+        public void CreateStudentShared(StudentShared studentShared)
+        {
+            db.StudentShareds.Add(studentShared);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
+        public void UpdateDbStudentShared(StudentShared studentShared)
+        {
+            db.Entry(studentShared).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...
+            db.SaveChanges();  // Updates all changed objects  
+        }
+
         public void UpdateDbAssignment(Assignment assignment)
         {
             db.Entry(assignment).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...

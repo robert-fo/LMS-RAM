@@ -36,8 +36,8 @@ namespace LMS_RAM.Controllers
 
             var thestudent = blogic.StudentFromLogin(user);
 
-            ViewBag.StudentId = thestudent.Id.ToString();
-            Session["StudentID"] = thestudent.Id;
+            //ViewBag.StudentId = thestudent.Id.ToString();
+            //Session["StudentID"] = thestudent.Id;
 
             var sCourses = blogic.StudentsCourses(thestudent.Id);
 
