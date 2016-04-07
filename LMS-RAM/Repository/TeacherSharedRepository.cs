@@ -50,5 +50,19 @@ namespace LMS_RAM.Repository
 			db.Entry(teacherShared).State = System.Data.Entity.EntityState.Modified; 
 			db.SaveChanges();  // Updates all changed objects  
 		}
+
+		public void StoreFile(string filepath) 
+		{ 
+
+		}
+
+		public void DeleteFile(string filepath)
+		{ 
+		
+		}
+		public void Dispose()
+		{
+			db.Dispose();
+		}
 	}
 }
