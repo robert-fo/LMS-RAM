@@ -16,7 +16,6 @@ namespace LMS_RAM.Controllers
 {
 	public class TeacherSharedsController : Controller
 	{
-		private ApplicationDbContext db = new ApplicationDbContext();
 		private IRepository repository;
 		private ITeacherSharedRepository tsRepository;
 
@@ -26,14 +25,20 @@ namespace LMS_RAM.Controllers
 			repository = new WorkingRepository();
 		}
 
-		public TeacherSharedsController(IRepository rep)
+		public TeacherSharedsController(IRepository rep,
+										ITeacherSharedRepository tsrep)
 		{
 			repository = rep;
+			tsRepository = tsrep;
 		}
 
+		// ----------------------------------------------------------
+		// Index
+		//
+		// inparameter is a courseId
+		// ----------------------------------------------------------
 		// GET: TeacherShareds
 		[Authorize(Roles = "admin, teacher, student")]
-		// inparameter is a courseId
 		public ActionResult Index(int? id)
 		{
 			// Authenticate the User and Role
@@ -44,53 +49,63 @@ namespace LMS_RAM.Controllers
 			bool isStudent = User.IsInRole("student");
 			bool isAdmin = User.IsInRole("admin");
 
-			if (isTeacher)
-			{
-				var teachersAll = repository.GetAllTeachers();
-
-				var theUser = from teacher in teachersAll
-							  where teacher.UserName == user
-							  select teacher;
-				ViewBag.TeacherId = theUser.First().Id.ToString();
-				theUserId = theUser.First().Id;
-			}
-			else if (isStudent)
-			{
-				var studentsAll = repository.GetAllStudents();
-
-				var theUser = from student in studentsAll
-							  where student.UserName == user
-							  select student;
-				ViewBag.StudentId = theUser.First().Id.ToString();
-				theUserId = theUser.First().Id;
-			}
-
-
-
-			//var teacherShareds = db.TeacherShareds.Include(t => t.Course).Include(t => t.Teacher);
 			var teacherShareds = tsRepository.GetAllTeacherShareds();
+			IEnumerable<TeacherShared> tShareds = null;
 
-			IEnumerable<TeacherShared> tShareds;
-
-			if (isTeacher || isStudent)
+			if (id != null)
 			{
-				if (id != null)
-				{
+				if (isAdmin)
+				{ 
 					tShareds = from teacherShared in teacherShareds
 							   where teacherShared.CourseId == id
-							   orderby teacherShared.CourseId, teacherShared.Id
+							   orderby teacherShared.TeacherId,
+									   teacherShared.CourseId,
+									   teacherShared.Id
 							   select teacherShared;
-					ViewBag.CourseId = id.ToString();
 				}
-				else
+				else if (isTeacher)
 				{
+					var teachersAll = repository.GetAllTeachers();
+					var theUser = from teacher in teachersAll
+								  where teacher.UserName == user
+								  select teacher;
+					theUserId = theUser.First().Id;
+					//ViewBag.TeacherId = theUserId.ToString();
+					
 					tShareds = from teacherShared in teacherShareds
-							   where teacherShared.TeacherId == theUserId
-							   orderby teacherShared.CourseId, teacherShared.Id
+							   where teacherShared.CourseId == id && 
+								     teacherShared.TeacherId == theUserId
+							   orderby teacherShared.CourseId,
+									   teacherShared.Id
+							   select teacherShared;
+					//ViewBag.CourseId = id.ToString();
+				}
+				else if (isStudent)
+				{
+					var studentsAll = repository.GetAllStudents();
+
+					var theUser = from student in studentsAll
+								  where student.UserName == user
+								  select student;
+					theUserId = theUser.First().Id;
+
+					var allSCourses = repository.GetAllStudentCourses();
+
+					var sCourses = from sCourse in allSCourses
+								   where sCourse.StudentId == theUserId &&
+								   		 sCourse.CourseId == id
+								   orderby sCourse.CourseId
+								   select sCourse;
+
+					tShareds = from teacherShared in teacherShareds
+							   join sc in sCourses
+							   on teacherShared.CourseId equals sc.CourseId
+							   orderby teacherShared.CourseId, 
+									   teacherShared.Id
 							   select teacherShared;
 				}
 			}
-			else
+			else // id == null
 			{
 				if (isAdmin)
 				{
@@ -98,16 +113,52 @@ namespace LMS_RAM.Controllers
 							   orderby teacherShared.CourseId, teacherShared.Id
 							   select teacherShared;
 				}
-				else
+				else if (isTeacher)
 				{
-					tShareds = new List<TeacherShared>();
-					ViewBag.Error = "No courseId found";
-				}
-			}
+					var teachersAll = repository.GetAllTeachers();
 
+					var theUser = from teacher in teachersAll
+								  where teacher.UserName == user
+								  select teacher;
+					theUserId = theUser.First().Id;
+					//ViewBag.TeacherId = theUserId.ToString();
+
+					tShareds = from teacherShared in teacherShareds
+							   where teacherShared.TeacherId == theUserId
+							   orderby teacherShared.CourseId,
+									   teacherShared.Id
+							   select teacherShared;
+				} 
+				else if (isStudent)
+				{
+					var studentsAll = repository.GetAllStudents();
+
+					var theUser = from student in studentsAll
+								  where student.UserName == user
+								  select student;
+					theUserId = theUser.First().Id;
+					//ViewBag.StudentId = theUserId.ToString();
+
+					var allSCourses = repository.GetAllStudentCourses();
+					var sCourses = from sCourse in allSCourses
+								   where sCourse.StudentId == theUserId
+								   orderby sCourse.CourseId
+								   select sCourse;
+					tShareds = from teacherShared in teacherShareds
+							   join sc in sCourses
+							   on teacherShared.CourseId equals sc.CourseId
+							   orderby teacherShared.CourseId, teacherShared.Id
+							   select teacherShared;
+				} 
+			}
 			return View(tShareds.ToList());
 		}
 
+		// ----------------------------------------------------------
+		// Details
+		//
+		// inparameter is a teacherSharedId
+		// ----------------------------------------------------------
 		// GET: TeacherShareds/Details/5
 		[Authorize(Roles = "admin, teacher, student")]
 		public ActionResult Details(int? id)
@@ -116,17 +167,21 @@ namespace LMS_RAM.Controllers
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
-			//TeacherShared teacherShared = db.TeacherShareds.Find(id);
-			int tsid = (int)id;
-			var teacherShared = tsRepository.getTeacherShared(tsid);
+
+			var teacherShared = tsRepository.getTeacherShared((int)id);
 
 			if (teacherShared == null)
 			{
 				return HttpNotFound();
 			}
+
 			return View(teacherShared);
 		}
 
+		// ----------------------------------------------------------
+		// Create
+		//
+		// ----------------------------------------------------------
 		// GET: TeacherShareds/Create
 		[Authorize(Roles = "teacher")]
 		public ActionResult Create()
@@ -148,7 +203,7 @@ namespace LMS_RAM.Controllers
 							  select teacher;
 
 				theUserId = theUser.First().Id;
-				//ViewBag.TeacherId = new SelectList(theUser, "Id", "SSN");
+				
 				ViewBag.TeacherId = theUserId;
 			}
 
@@ -158,7 +213,6 @@ namespace LMS_RAM.Controllers
 								  orderby course.Id
 								  select course;
 
-			//ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
 			ViewBag.CourseId = new SelectList(teachersCourses, "Id", "Name");
 
 			return View();
@@ -180,8 +234,10 @@ namespace LMS_RAM.Controllers
 					if (ModelState.IsValid)
 					{
 						teacherShared.FileName = Path.GetFileName(FileName.FileName);
-						db.TeacherShareds.Add(teacherShared);
-						db.SaveChanges();
+						
+						//db.TeacherShareds.Add(teacherShared);
+						//db.SaveChanges();
+						tsRepository.CreateTeacherShared(teacherShared);
 
 						// store file
 						string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"), teacherShared.TeacherId.ToString() + "_" +
@@ -204,6 +260,11 @@ namespace LMS_RAM.Controllers
 			return RedirectToAction("Index", teacherShared.CourseId);
 		}
 
+		// ----------------------------------------------------------
+		// Edit
+		//
+		// inparameter is a teacherSharedId
+		// ----------------------------------------------------------
 		// GET: TeacherShareds/Edit/5
 		[Authorize(Roles = "teacher")]
 		public ActionResult Edit(int? id)
@@ -225,7 +286,9 @@ namespace LMS_RAM.Controllers
 								 select course;
 
 			ViewBag.CourseId = new SelectList(teachersCourse, "Id", "Name", teacherShared.CourseId);
-			ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "Teacher name", teacherShared.TeacherId);
+			// amh
+			var teachers = tsRepository.GetAllTeacherShareds();
+			ViewBag.TeacherId = new SelectList(teachers, "Id", "Teacher name", teacherShared.TeacherId);
 			return View(teacherShared);
 		}
 
@@ -246,8 +309,10 @@ namespace LMS_RAM.Controllers
 
 			//update database
 			teacherShared.FileName = filename;
-			db.Entry(teacherShared).State = System.Data.Entity.EntityState.Modified;
-			db.SaveChanges();
+			//amh
+			//db.Entry(teacherShared).State = System.Data.Entity.EntityState.Modified;
+			//db.SaveChanges();
+			tsRepository.UpdateTeacherShared(teacherShared);
 
 			string oldFiles = teacherShared.TeacherId + "_" +
 					teacherShared.CourseId + "_" +
@@ -283,10 +348,15 @@ namespace LMS_RAM.Controllers
 				return RedirectToAction("Index", teacherShared.CourseId);
 			}
 
-			ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
+			// amh
+			//ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", teacherShared.CourseId);
+			var courses = repository.GetAllCourses();
+			ViewBag.CourseId = new SelectList(courses, "Id", "Name", teacherShared.CourseId);
 
-			return RedirectToAction("Index", teacherShared.CourseId);
-			ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "SSN", teacherShared.TeacherId);
+			//amh
+			//return RedirectToAction("Index", teacherShared.CourseId);
+			var teachers = repository.GetAllTeachers();
+			ViewBag.TeacherId = new SelectList(teachers, "Id", "SSN", teacherShared.TeacherId);
 			return RedirectToAction("Index", teacherShared.CourseId);
 		}
 
@@ -298,7 +368,11 @@ namespace LMS_RAM.Controllers
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
-			TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			//amh
+			//TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			int tsid = (int)id;
+			TeacherShared teacherShared = tsRepository.getTeacherShared(tsid);
+
 			if (teacherShared == null)
 			{
 				return HttpNotFound();
@@ -314,12 +388,16 @@ namespace LMS_RAM.Controllers
 		public ActionResult DeleteConfirmed(int id)
 		{
 			// remove from db
-			TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			//TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			TeacherShared teacherShared = tsRepository.getTeacherShared((int)id);
 			// store courseId in viewbag
 			int theCourseId = teacherShared.CourseId;
 
-			db.TeacherShareds.Remove(teacherShared);
-			db.SaveChanges();
+			//amh
+			//db.TeacherShareds.Remove(teacherShared);
+			//db.SaveChanges();
+			tsRepository.DeleteTeacherShared((int)id);
+			
 
 			// remove the file also
 			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"),
@@ -346,7 +424,9 @@ namespace LMS_RAM.Controllers
 		[Authorize(Roles = "admin, teacher, student")]
 		public ActionResult Download(int id)
 		{
-			TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			//amh
+			//TeacherShared teacherShared = db.TeacherShareds.Find(id);
+			TeacherShared teacherShared = tsRepository.getTeacherShared((int)id);
 			string filePath = Path.Combine(Server.MapPath("~/Uploads/TeachersShared/"),
 											teacherShared.TeacherId.ToString() + "_" +
 											teacherShared.CourseId.ToString() + "_" +
@@ -366,6 +446,7 @@ namespace LMS_RAM.Controllers
 			}
 			catch (Exception e)
 			{
+				ViewBag.Error = e.Message;
 				return RedirectToAction("Index");
 			}
 		}
@@ -374,7 +455,7 @@ namespace LMS_RAM.Controllers
 		{
 			if (disposing)
 			{
-				db.Dispose();
+				tsRepository.Dispose();
 			}
 			base.Dispose(disposing);
 		}

@@ -9,10 +9,13 @@ namespace LMS_RAM.Repository
 {
    public interface ITeacherSharedRepository
     {
-        List<TeacherShared> GetAllTeacherShareds();
+		List<TeacherShared> GetAllTeacherShareds();
 		TeacherShared getTeacherShared(int id);
 		void CreateTeacherShared(TeacherShared teacherShared);
 		void DeleteTeacherShared(int id);
 		void UpdateTeacherShared(TeacherShared teacherShared);
+		void StoreFile(string filepath);
+		void DeleteFile(string filepath);
+		void Dispose();
 	}
 }
