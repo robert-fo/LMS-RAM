@@ -63,6 +63,18 @@ namespace LMS_RAM.Repository
             db.SaveChanges(); // Updates all changed objects
         }
 
+        public StudentShared getStudentShared(int id)
+        {
+            return db.StudentShareds.Find(id);
+        }
+
+        public void DeleteStudentShared(int id)
+        {
+            StudentShared studentShared = db.StudentShareds.Find(id);
+            db.StudentShareds.Remove(studentShared);
+            db.SaveChanges(); // Updates all changed objects
+        }
+
         public void UpdateDbStudentShared(StudentShared studentShared)
         {
             db.Entry(studentShared).State = System.Data.Entity.EntityState.Modified; // Ej using för då blir det knas på retunr typerna i get metoderna...

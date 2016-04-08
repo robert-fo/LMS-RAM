@@ -7,6 +7,10 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using System.Data;
+using System.Data.Entity;
+using System.Net;
+
 
 namespace LMS_RAM.Controllers
 {
@@ -86,10 +90,39 @@ namespace LMS_RAM.Controllers
             return View(cstudentShared);
         }
 
-        // GET: StudentShared/Details/5
-        public ActionResult Details(int id)
+        [Authorize(Roles = "student")]
+        public ActionResult SharedIndex(int? id)
         {
-            return View();
+            var studentSharedAll = repository.GetAllStudentShared();
+            List<StudentShared> studentShared = new List<StudentShared>();
+
+            foreach (var sitem in studentSharedAll)
+            {
+                if (sitem.CourseId == id)
+                {
+                    studentShared.Add(sitem);
+                }
+            }
+            return View(studentShared);
+        }
+
+        // GET: StudentShared/Details/5
+        [Authorize(Roles = "admin, teacher, student")]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var studentShared = repository.getStudentShared((int)id);
+
+            if (studentShared == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(studentShared);
         }
 
         // GET: StudentShared/Create
@@ -155,39 +188,112 @@ namespace LMS_RAM.Controllers
         // POST: StudentShared/Edit/5
         [Authorize(Roles = "student")]
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,CourseId,StudentId,Description,FileName")] StudentShared studentShared)
+        public ActionResult Edit([Bind(Include = "Id,CourseId,StudentId,Description,FileName")] StudentShared studentShared, HttpPostedFileBase FileName)
         {
+            int length = FileName.FileName.Length;
+            int index = FileName.FileName.LastIndexOf('\\') + 1;
+
+
+            string path = FileName.FileName.Substring(0, index);
+            string filename = FileName.FileName.Substring(index);
+
+            //update database
+            studentShared.FileName = filename;
+           
+            repository.UpdateDbStudentShared(studentShared);
+
+
+            string oldFiles = studentShared.CourseId + "_" +
+                    studentShared.StudentId + "_" +
+                    studentShared.Id + "_*.pdf";
+
             try
             {
-                repository.UpdateDbStudentShared(studentShared);
-                return RedirectToAction("Index", new { id = Session["CourseID"] });
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                // remove old file
+                foreach (string DeleteFileName in Directory.EnumerateFiles
+                    (Server.MapPath("~/Uploads/StudentsShared/"), oldFiles))
+                {
+                    System.IO.File.Delete(Path.Combine(Server.MapPath("~/Uploads/StudentsShared/"), DeleteFileName));
+                }
 
-        // GET: StudentShared/Delete/5
-        public ActionResult Delete(int id)
-        {
+                //repository.CreateFile()
+                if (FileName != null && FileName.ContentLength > 0)
+                {
+                    string filePath = Path.Combine(Server.MapPath("~/Uploads/StudentsShared/"),
+                        studentShared.CourseId.ToString() + "_" +
+                        studentShared.StudentId.ToString() + "_" +
+                        studentShared.Id + "_" +
+                        Path.GetFileName(FileName.FileName));
+
+                    // store new file
+                    FileName.SaveAs(filePath);
+
+                    return RedirectToAction("Index", studentShared.CourseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error(e.Message);
+                return RedirectToAction("Index", studentShared.CourseId);
+            }
             return View();
         }
 
-        // POST: StudentShared/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+
+
+        // GET: StudentShared/Delete/5
+        [Authorize(Roles = "student")]
+        public ActionResult Delete(int? id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            
+            int sid = (int)id;
+            StudentShared studentShared = repository.getStudentShared(sid);
+
+            if (studentShared == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(studentShared);
+        }
+
+        // POST: StudentShared/Delete/5
+        [Authorize(Roles = "student")]
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            
+            StudentShared studentShared = repository.getStudentShared((int)id);
+            
+            int theCourseId = studentShared.CourseId;
+
+            repository.DeleteStudentShared((int)id);
+
+
+            // remove the file also
+            string filePath = Path.Combine(Server.MapPath("~/Uploads/StudentsShared/"),
+                studentShared.CourseId.ToString() + "_" +
+                studentShared.StudentId.ToString() + "_" +
+                studentShared.Id.ToString() + "_" +
+                studentShared.FileName);
+
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ViewBag.Error(e.Message);
             }
+
+            return RedirectToAction("Index", theCourseId);
         }
     }
 }
