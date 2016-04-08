@@ -342,6 +342,16 @@ namespace LMS_RAM.Controllers
 
         }
 
+        // GET: TeacherHHome/StudentsShared/5
+        public ActionResult StudentsShared(int? id)
+        {
+
+            Session["StudentID"] = id;
+
+            return Redirect("/StudentsShared/Index/" + Session["CourseID"]);
+
+        }
+
         // GET: TeacherHHome/Assignments/5
         public ActionResult TeacherShared(int? id)
         {

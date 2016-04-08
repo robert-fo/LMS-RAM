@@ -54,11 +54,11 @@ namespace LMS_RAM.Controllers
                             select student;
 
                 studentId = studenten.First().Id;
-
-                Session["StudentID"] = studentId;
+                ViewBag.sId = studentId;
             }
             else
             {
+                ViewBag.Role = "teacher";
                 int sID = Convert.ToInt32(Session["StudentID"]);
                 studenten = from student in studentsAll
                             where student.Id == sID
@@ -90,11 +90,18 @@ namespace LMS_RAM.Controllers
             return View(cstudentShared);
         }
 
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "teacher, student")]
         public ActionResult SharedIndex(int? id)
         {
             var studentSharedAll = repository.GetAllStudentShared();
             List<StudentShared> studentShared = new List<StudentShared>();
+
+            Session["CourseID"] = id;
+
+            if (Session["StudentID"] != null)
+            {
+                ViewBag.Role = "teacher";
+            }
 
             foreach (var sitem in studentSharedAll)
             {
@@ -127,8 +134,9 @@ namespace LMS_RAM.Controllers
 
         // GET: StudentShared/Create
         [Authorize(Roles = "student")]
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
+            ViewBag.sId = id;
             return View();
         }
 
@@ -155,7 +163,7 @@ namespace LMS_RAM.Controllers
                     FileName.SaveAs(filePath);
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = Session["CourseID"] });
             }
             catch
             {
@@ -163,7 +171,7 @@ namespace LMS_RAM.Controllers
             }
         }
 
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "teacher, student")]
         public FileResult Download(StudentShared studentShared)
         {
             string fileName = "~/Uploads/StudentsShared/" + studentShared.CourseId + "_" + studentShared.StudentId + "_" + studentShared.Id + "_" + studentShared.FileName;
@@ -242,7 +250,7 @@ namespace LMS_RAM.Controllers
 
 
         // GET: StudentShared/Delete/5
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "teacher, student")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -262,7 +270,7 @@ namespace LMS_RAM.Controllers
         }
 
         // POST: StudentShared/Delete/5
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "teacher, student")]
         [HttpPost]
         public ActionResult Delete(int id)
         {

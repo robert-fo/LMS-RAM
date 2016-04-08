@@ -7,7 +7,7 @@
 <h2>StudentShareds</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", new { id = ViewBag.sId })
 </p>
 <table class="table">
     <tr>
@@ -50,3 +50,4 @@
 }
 
 </table>
+@Html.ActionLink("Back to List", "Index", "StudentsHome")
