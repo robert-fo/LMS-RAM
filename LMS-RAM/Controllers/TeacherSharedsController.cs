@@ -65,12 +65,7 @@ namespace LMS_RAM.Controllers
 				}
 				else if (isTeacher)
 				{
-					var teachersAll = repository.GetAllTeachers();
-					var theUser = from teacher in teachersAll
-								  where teacher.UserName == user
-								  select teacher;
-					theUserId = theUser.First().Id;
-					//ViewBag.TeacherId = theUserId.ToString();
+					theUserId = this.getUserIdForStudentAndTecher();
 					
 					tShareds = from teacherShared in teacherShareds
 							   where teacherShared.CourseId == id && 
@@ -78,16 +73,10 @@ namespace LMS_RAM.Controllers
 							   orderby teacherShared.CourseId,
 									   teacherShared.Id
 							   select teacherShared;
-					//ViewBag.CourseId = id.ToString();
 				}
 				else if (isStudent)
 				{
-					var studentsAll = repository.GetAllStudents();
-
-					var theUser = from student in studentsAll
-								  where student.UserName == user
-								  select student;
-					theUserId = theUser.First().Id;
+					theUserId = this.getUserIdForStudentAndTecher();
 
 					var allSCourses = repository.GetAllStudentCourses();
 
@@ -115,13 +104,7 @@ namespace LMS_RAM.Controllers
 				}
 				else if (isTeacher)
 				{
-					var teachersAll = repository.GetAllTeachers();
-
-					var theUser = from teacher in teachersAll
-								  where teacher.UserName == user
-								  select teacher;
-					theUserId = theUser.First().Id;
-					//ViewBag.TeacherId = theUserId.ToString();
+					theUserId = this.getUserIdForStudentAndTecher();
 
 					tShareds = from teacherShared in teacherShareds
 							   where teacherShared.TeacherId == theUserId
@@ -131,19 +114,14 @@ namespace LMS_RAM.Controllers
 				} 
 				else if (isStudent)
 				{
-					var studentsAll = repository.GetAllStudents();
-
-					var theUser = from student in studentsAll
-								  where student.UserName == user
-								  select student;
-					theUserId = theUser.First().Id;
-					//ViewBag.StudentId = theUserId.ToString();
+					theUserId = this.getUserIdForStudentAndTecher();
 
 					var allSCourses = repository.GetAllStudentCourses();
 					var sCourses = from sCourse in allSCourses
 								   where sCourse.StudentId == theUserId
 								   orderby sCourse.CourseId
 								   select sCourse;
+
 					tShareds = from teacherShared in teacherShareds
 							   join sc in sCourses
 							   on teacherShared.CourseId equals sc.CourseId
@@ -458,6 +436,35 @@ namespace LMS_RAM.Controllers
 				tsRepository.Dispose();
 			}
 			base.Dispose(disposing);
+		}
+
+
+		protected int getUserIdForStudentAndTecher()
+		{
+			int theUserId = 0;
+			var user = User.Identity.GetUserName();
+			bool isTeacher = User.IsInRole("teacher");
+			bool isStudent = User.IsInRole("student");
+			
+			if (isTeacher)
+			{
+				var teachersAll = repository.GetAllTeachers();
+				var theUser = from teacher in teachersAll
+								where teacher.UserName == user
+								select teacher;
+				theUserId = theUser.First().Id;
+			}
+			if (isStudent)
+			{
+				var studentsAll = repository.GetAllStudents();
+
+				var theUser = from student in studentsAll
+							  where student.UserName == user
+							  select student;
+				theUserId = theUser.First().Id;
+			}
+
+			return (theUserId);
 		}
 	}
 }
