@@ -53,6 +53,8 @@ namespace LMS_RAM.Controllers
 
                 studentId = studenten.First().Id;
 
+                ViewBag.sId = studentId;
+
                 //Session["StudentID"] = studentId;
             }
             else
@@ -118,10 +120,13 @@ namespace LMS_RAM.Controllers
 
         // GET: StudentAssignment/Create
         [Authorize(Roles = "student")]
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
             var temp = Session["CourseID"];
-            
+
+
+            ViewBag.sId = id;
+
             ViewBag.ScheduleItemList = repository.GetScheduleItemList(Convert.ToInt32(Session["CourseID"]));
 
             //ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
@@ -154,8 +159,8 @@ namespace LMS_RAM.Controllers
 
                         string filePath = Server.MapPath(subPath1 + assignment.StudentId + "_" + assignment.Id + "_" + subPath2);
                         FileName.SaveAs(filePath);
-                      
-                        return RedirectToAction("Index");
+
+                        return RedirectToAction("Index", new { id = Session["CourseID"] });
                     }
                 }
                 return View();
