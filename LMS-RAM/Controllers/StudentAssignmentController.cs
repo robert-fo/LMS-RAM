@@ -31,6 +31,11 @@ namespace LMS_RAM.Controllers
         [Authorize(Roles = "teacher, student")]
         public ActionResult Index(int? id)
         {
+            var user = User.Identity.GetUserName();
+            bool isTeacher = User.IsInRole("teacher");
+            bool isStudent = User.IsInRole("student");
+            bool isAdmin = User.IsInRole("admin");
+            
             var assignmentsAll = repository.GetAllAssignments();
             var studentsAll = repository.GetAllStudents();
             var scheduleItemsAll = repository.GetAllScheduleItems();
@@ -42,10 +47,8 @@ namespace LMS_RAM.Controllers
 
              Session["CourseID"] = id;
 
-            if (Session["StudentID"] == null)
-            {
-                var user = User.Identity.GetUserName();
-               
+             if (isStudent == true)
+            {           
 
                 studenten = from student in studentsAll
                             where student.UserName == user
@@ -55,7 +58,6 @@ namespace LMS_RAM.Controllers
 
                 ViewBag.sId = studentId;
 
-                //Session["StudentID"] = studentId;
             }
             else
             {
@@ -67,10 +69,6 @@ namespace LMS_RAM.Controllers
 
                 studentId = studenten.First().Id;
             }
-
-            //var studenten = from student in studentsAll
-            //                where student.UserName == user
-            //                select student;
 
             List<Assignment> sAssignments = new List<Assignment>();
             List<Assignment> cAssignments = new List<Assignment>();
@@ -174,7 +172,10 @@ namespace LMS_RAM.Controllers
         [Authorize(Roles = "teacher, student")]
         public FileResult Download(Assignment assignment)
         {
-            string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" + assignment.Id + "_" + assignment.FileName;
+            string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" 
+                + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" 
+                + assignment.Id + "_" + assignment.FileName;
+
             string contentType = "application/pdf";
 
             return new FilePathResult(fileName, contentType)

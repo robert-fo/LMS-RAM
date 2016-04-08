@@ -50,5 +50,12 @@
 
 </table>
 <div>
-    @Html.ActionLink("Back to Home", "Index", "TeachersHome")
+@if (User.IsInRole("teacher"))
+{
+    @Html.ActionLink("Back to home", "Index", "TeachersHome")
+}
+@if (User.IsInRole("student"))
+{
+    @Html.ActionLink("Back to home", "Index", "StudentsHome")
+}
 </div>

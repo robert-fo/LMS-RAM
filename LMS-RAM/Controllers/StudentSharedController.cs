@@ -33,6 +33,10 @@ namespace LMS_RAM.Controllers
         [Authorize(Roles = "student")]
         public ActionResult Index(int? id)
         {
+            var user = User.Identity.GetUserName();
+            bool isTeacher = User.IsInRole("teacher");
+            bool isStudent = User.IsInRole("student");
+            bool isAdmin = User.IsInRole("admin");
             
             var studentsAll = repository.GetAllStudents();
             //var coursesAll = repository.GetAllCourses();
@@ -45,10 +49,8 @@ namespace LMS_RAM.Controllers
 
             Session["CourseID"] = id;
 
-            if (Session["StudentID"] == null)
+            if (isStudent == true)
             {
-                var user = User.Identity.GetUserName();
-
                 studenten = from student in studentsAll
                             where student.UserName == user
                             select student;
@@ -58,7 +60,6 @@ namespace LMS_RAM.Controllers
             }
             else
             {
-                ViewBag.Role = "teacher";
                 int sID = Convert.ToInt32(Session["StudentID"]);
                 studenten = from student in studentsAll
                             where student.Id == sID
@@ -69,7 +70,6 @@ namespace LMS_RAM.Controllers
 
             List<StudentShared> sstudentShared = new List<StudentShared>();
             List<StudentShared> cstudentShared = new List<StudentShared>();
-            //List<Course> courses = new List<Course>();
 
             foreach (var aitem in studentSharedAll)
             {
