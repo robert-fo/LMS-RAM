@@ -294,7 +294,6 @@
     <Content Include="Views\StudentsHome\Account.cshtml" />
     <Content Include="Views\StudentsHome\Details.cshtml" />
     <Content Include="Views\TeachersHome\Account.cshtml" />
-    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
     <Content Include="Views\TeachersHome\Create.cshtml" />
     <Content Include="Views\TeachersHome\Delete.cshtml" />
     <Content Include="Views\TeachersHome\Details.cshtml" />
@@ -309,7 +308,6 @@
     <Content Include="Views\TeachersHome\Account.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\TeachersHome\ClassIndex.cshtml" />
     <Content Include="Views\TeachersHome\Create.cshtml" />
     <Content Include="Views\TeachersHome\Delete.cshtml" />
     <Content Include="Views\TeachersHome\Details.cshtml" />
@@ -422,7 +420,7 @@
     <Content Include="Views\TeacherShareds\Create.cshtml" />
     <Content Include="Views\TeacherShareds\Delete.cshtml" />
     <Content Include="Views\TeacherShareds\Details.cshtml" />
-    <Content Include="Views\TeacherShareds\Edit.cshtml" />
+    <None Include="Views\TeacherShareds\Edit.cshtml" />
     <Content Include="Views\TeacherShareds\Index.cshtml" />
     <Content Include="Views\ScheduleItems\Create.cshtml" />
     <Content Include="Views\ScheduleItems\Delete.cshtml" />
