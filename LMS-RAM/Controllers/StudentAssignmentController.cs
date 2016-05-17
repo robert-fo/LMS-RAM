@@ -31,6 +31,11 @@ namespace LMS_RAM.Controllers
         [Authorize(Roles = "teacher, student")]
         public ActionResult Index(int? id)
         {
+            var user = User.Identity.GetUserName();
+            bool isTeacher = User.IsInRole("teacher");
+            bool isStudent = User.IsInRole("student");
+            bool isAdmin = User.IsInRole("admin");
+            
             var assignmentsAll = repository.GetAllAssignments();
             var studentsAll = repository.GetAllStudents();
             var scheduleItemsAll = repository.GetAllScheduleItems();
@@ -42,10 +47,8 @@ namespace LMS_RAM.Controllers
 
              Session["CourseID"] = id;
 
-            if (Session["StudentID"] == null)
-            {
-                var user = User.Identity.GetUserName();
-               
+             if (isStudent == true)
+            {           
 
                 studenten = from student in studentsAll
                             where student.UserName == user
@@ -53,7 +56,8 @@ namespace LMS_RAM.Controllers
 
                 studentId = studenten.First().Id;
 
-                //Session["StudentID"] = studentId;
+                ViewBag.sId = studentId;
+
             }
             else
             {
@@ -65,10 +69,6 @@ namespace LMS_RAM.Controllers
 
                 studentId = studenten.First().Id;
             }
-
-            //var studenten = from student in studentsAll
-            //                where student.UserName == user
-            //                select student;
 
             List<Assignment> sAssignments = new List<Assignment>();
             List<Assignment> cAssignments = new List<Assignment>();
@@ -118,10 +118,13 @@ namespace LMS_RAM.Controllers
 
         // GET: StudentAssignment/Create
         [Authorize(Roles = "student")]
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
             var temp = Session["CourseID"];
-            
+
+
+            ViewBag.sId = id;
+
             ViewBag.ScheduleItemList = repository.GetScheduleItemList(Convert.ToInt32(Session["CourseID"]));
 
             //ViewBag.ScheduleItemId = new SelectList(repository.GetAllScheduleItems(), "Id", "Name");
@@ -154,8 +157,8 @@ namespace LMS_RAM.Controllers
 
                         string filePath = Server.MapPath(subPath1 + assignment.StudentId + "_" + assignment.Id + "_" + subPath2);
                         FileName.SaveAs(filePath);
-                      
-                        return RedirectToAction("Index");
+
+                        return RedirectToAction("Index", new { id = Session["CourseID"] });
                     }
                 }
                 return View();
@@ -169,7 +172,10 @@ namespace LMS_RAM.Controllers
         [Authorize(Roles = "teacher, student")]
         public FileResult Download(Assignment assignment)
         {
-            string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" + assignment.Id + "_" + assignment.FileName;
+            string fileName = "~/Uploads/Assignments/" + Session["CourseID"] + "_" 
+                + assignment.ScheduleItemId + "/" + assignment.StudentId +  "_" 
+                + assignment.Id + "_" + assignment.FileName;
+
             string contentType = "application/pdf";
 
             return new FilePathResult(fileName, contentType)

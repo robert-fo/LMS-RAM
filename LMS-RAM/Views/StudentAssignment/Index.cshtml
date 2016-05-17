@@ -7,7 +7,7 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", new { id = ViewBag.sId })
 </p>
 <table class="table">
     <tr>
@@ -63,7 +63,7 @@
 
 </table>
 <div>
-    @if (ViewBag.Role == "teacher")
+    @if (User.IsInRole("teacher"))
     {
         @Html.ActionLink("Back to Course Index", "CourseIndex", "TeachersHome", new { id = Session["CourseID"] }, null)
     }

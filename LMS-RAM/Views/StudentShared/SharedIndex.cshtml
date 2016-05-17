@@ -7,7 +7,6 @@
 <h2>SharedIndex</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
@@ -42,9 +41,25 @@
             @Html.DisplayFor(modelItem => item.FileName)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { id=item.Id })         
+            @Html.ActionLink("Details", "Details", new { id=item.Id })
+            @if (ViewBag.Role != "teacher")
+            {
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            }        
         </td>
     </tr>
 }
 
 </table>
+
+<div>
+    @if (User.IsInRole("teacher"))
+    {
+        @Html.ActionLink("Back to Course Index", "CourseIndex", "TeachersHome", new { id = Session["CourseID"] }, null)
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "StudentsHome")
+    }
+
+</div>
